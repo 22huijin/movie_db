@@ -3,7 +3,6 @@ package com.example.demo.schedule.domain;
 import com.example.demo.movie.domain.Movie;
 import com.example.demo.screen.domain.Screen;
 import com.example.demo.reservation.domain.Reservation;
-import com.example.demo.reservation.domain.SeatLock;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,4 @@ public class Schedule {
 
   @OneToMany(mappedBy = "schedule")
   private List<Reservation> reservations;
-
-  @OneToMany(mappedBy = "schedule")
-  private List<SeatLock> seatLocks;
 }

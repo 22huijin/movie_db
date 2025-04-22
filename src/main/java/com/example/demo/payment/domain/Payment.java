@@ -15,7 +15,7 @@ public class Payment {
 
   @OneToOne
   @JoinColumn(name = "reservation_id")
-  private Reservation reservation;
+  private Reservation reservation;//id
 
   private String paymentMethod;
   private int totalPrice;

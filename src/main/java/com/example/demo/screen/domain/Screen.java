@@ -16,7 +16,7 @@ public class Screen {
   private Long screenId;
 
   private String name;
-  private int totalSeats;
+  private int totalSeats; //삭제?
 
   @OneToMany(mappedBy = "screen")
   private List<Seat> seats;

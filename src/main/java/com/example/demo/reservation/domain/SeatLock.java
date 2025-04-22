@@ -1,7 +1,6 @@
 package com.example.demo.reservation.domain;
 
-import com.example.demo.screen.domain.Seat;
-import com.example.demo.schedule.domain.Schedule;
+import com.example.demo.schedule.domain.ScheduleSeat;
 import com.example.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,13 +16,13 @@ public class SeatLock {
   @GeneratedValue
   private Long lockId;
 
+  @MapsId("scheduleSeatId")
   @ManyToOne
-  @JoinColumn(name = "seat_id")
-  private Seat seat;
-
-  @ManyToOne
-  @JoinColumn(name = "showtime_id")
-  private Schedule schedule;
+  @JoinColumns({
+      @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id"),
+      @JoinColumn(name = "seat_id", referencedColumnName = "seat_id")
+  })
+  private ScheduleSeat scheduleSeat;
 
   @ManyToOne(optional = true)
   @JoinColumn(name = "user_id")

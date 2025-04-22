@@ -1,7 +1,6 @@
 package com.example.demo.screen.domain;
 
-import com.example.demo.reservation.domain.ReservedSeat;
-import com.example.demo.reservation.domain.SeatLock;
+import com.example.demo.schedule.domain.ScheduleSeat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +18,11 @@ public class Seat {
 
   @ManyToOne
   @JoinColumn(name = "screen_id")
-  private Screen screen;
+  private Screen screen;//id
 
   private char row_no;
   private int col_no;
 
   @OneToMany(mappedBy = "seat")
-  private List<ReservedSeat> reservedSeats;
-
-  @OneToMany(mappedBy = "seat")
-  private List<SeatLock> seatLocks;
+  private List<ScheduleSeat> reservedSeats;
 }
