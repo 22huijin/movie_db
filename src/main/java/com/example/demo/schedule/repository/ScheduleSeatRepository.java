@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface ScheduleSeatRepository extends JpaRepository<ScheduleSeat, ScheduleSeatId> {
   List<ScheduleSeat> findBySchedule_ScheduleId(Long scheduleId);
-  List<ScheduleSeat> findAllBySchedule(Schedule schedule);
   void deleteAllBySchedule(Schedule schedule);
 }
