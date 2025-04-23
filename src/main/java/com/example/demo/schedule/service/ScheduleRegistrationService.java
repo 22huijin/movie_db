@@ -59,7 +59,7 @@ public class ScheduleRegistrationService {
     schedule.setAvailableSeats(screen.getTotalSeats());
     schedule.setPrice(dto.getPrice());
 
-    final Schedule savedSchedule = scheduleRepository.save(schedule); // ✅ 재할당 없이 final 변수 사용
+    final Schedule savedSchedule = scheduleRepository.save(schedule);
 
     // 5. schedule_seat 생성
     List<Seat> seats = seatRepository.findAllByScreen(screen);
@@ -68,7 +68,7 @@ public class ScheduleRegistrationService {
       ss.setSchedule(savedSchedule);
       ss.setSeat(seat);
       ss.setId(new ScheduleSeatId(savedSchedule.getScheduleId(), seat.getSeatId()));
-      ss.setStatus("예약가능");
+      ss.setStatus("AVAILABLE");
       return ss;
     }).toList();
 
