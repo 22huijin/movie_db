@@ -21,6 +21,7 @@ public class Movie {
   private int runningTime;
   private LocalDate releaseDate;
   private String ageRating;
+
   @Lob
   private String description;
   private float likeRating;
