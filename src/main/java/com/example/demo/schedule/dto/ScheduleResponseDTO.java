@@ -10,6 +10,7 @@ import lombok.Getter;
 @Schema(description = "상영 스케줄 응답 DTO")
 public class ScheduleResponseDTO {
 
+
   @Schema(description = "스케줄 ID", example = "101")
   private Long scheduleId;
 
