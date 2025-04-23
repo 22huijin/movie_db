@@ -17,7 +17,7 @@ public class ScheduleSeatService {
 
   public List<ScheduleSeatResponseDTO> getSeatsBySchedule(Long scheduleId) {
     // schedule_id 기준으로 전체 좌석 조회 후 정렬
-    List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findByScheduleId(scheduleId);
+    List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findBySchedule_ScheduleId(scheduleId);
 //        .stream()
 //        .sorted((a, b) -> {
 //          int rowCompare = Character.compare(a.getSeat().getRow_no(), b.getSeat().getRow_no());

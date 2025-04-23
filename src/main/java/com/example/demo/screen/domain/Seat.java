@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class Seat {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long seatId;
 
   @ManyToOne
