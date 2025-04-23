@@ -12,18 +12,23 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ScheduleSeatService {
-  private final ScheduleSeatRepository reservedSeatRepository;
+
+  private final ScheduleSeatRepository scheduleSeatRepository;
 
   public List<ScheduleSeatResponseDTO> getSeatsBySchedule(Long scheduleId) {
-    List<ScheduleSeat> scheduleSeats = reservedSeatRepository.findBySchedule_ScheduleId(scheduleId)
-        .stream()
-        .sorted((a, b) -> {
-          int rowCompare = Character.compare(a.getSeat().getRow_no(), b.getSeat().getRow_no());
-          if (rowCompare != 0) return rowCompare;
-          return Integer.compare(a.getSeat().getCol_no(), b.getSeat().getCol_no());
-        })
-        .collect(Collectors.toList());
+    // schedule_id 기준으로 전체 좌석 조회 후 정렬
+    List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findByScheduleId(scheduleId);
+//        .stream()
+//        .sorted((a, b) -> {
+//          int rowCompare = Character.compare(a.getSeat().getRow_no(), b.getSeat().getRow_no());
+//          if (rowCompare != 0) return rowCompare;
+//          return Integer.compare(a.getSeat().getCol_no(), b.getSeat().getCol_no());
+//        })
+//        .toList();
+    System.out.println("조회된 좌석 수: " + scheduleSeats.size());
 
+
+    // DTO 변환
     return scheduleSeats.stream()
         .map(seat -> new ScheduleSeatResponseDTO(
             seat.getSeat().getRow_no(),
