@@ -17,4 +17,12 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
   List<Schedule> findAllSchedulesOfDay(
       @Param("startOfDay") LocalDateTime startOfDay,
       @Param("startOfNextDay") LocalDateTime startOfNextDay);
+
+  @Query("SELECT s FROM Schedule s " +
+      "WHERE s.screen.screenId = :screenId " +
+      "AND (:endTime > s.startTime AND :startTime < s.endTime)")
+  List<Schedule> findConflictingSchedules(
+      @Param("screenId") Long screenId,
+      @Param("startTime") LocalDateTime startTime,
+      @Param("endTime") LocalDateTime endTime);
 }

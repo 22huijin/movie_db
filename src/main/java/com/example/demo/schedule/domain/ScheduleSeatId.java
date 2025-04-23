@@ -6,6 +6,14 @@ import java.io.Serializable;
 
 @Embeddable
 public class ScheduleSeatId implements Serializable {
-  private Integer scheduleId;
-  private Integer seatId;
+  private Long scheduleId;
+  private Long seatId;
+
+  public ScheduleSeatId(Long scheduleId, Long seatId) {
+    this.scheduleId = scheduleId;
+    this.seatId = seatId;
+  }
+
+  // 기본 생성자도 필요
+  public ScheduleSeatId() {}
 }
