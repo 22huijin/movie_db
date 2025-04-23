@@ -31,11 +31,6 @@ public class ScheduleService {
 
     List<Schedule> schedules = scheduleRepository.findAllSchedulesOfDay(startOfDay, startOfNextDay);
 
-    log.info("요청 날짜: {}", date);
-    log.info("현재 날짜: {}", today);
-    log.info("필터링 전: {}건", schedules.size());
-    log.info("필터링 후: {}건", schedules.stream().filter(s -> s.getStartTime().isAfter(now)).count());
-
     // 오늘이라면 현재 시간 이후만 필터
     if (date.equals(today)) {
       schedules = schedules.stream()
@@ -45,6 +40,7 @@ public class ScheduleService {
 
     return schedules.stream()
         .map(s -> new ScheduleResponseDTO(
+            s.getScheduleId(),
             s.getMovie().getTitle(),
             s.getScreen().getName(),
             s.getStartTime().toString(),
