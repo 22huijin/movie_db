@@ -12,11 +12,13 @@ import java.util.List;
 @Setter
 public class Screen {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "screen_seq_gen")
+  @SequenceGenerator(name = "screen_seq_gen", sequenceName = "SCREEN_SEQ", allocationSize = 1)
   private Long screenId;
 
+  @Column(unique = true)
   private String name;
-  private int totalSeats; //삭제?
+  private int totalSeats;
 
   @OneToMany(mappedBy = "screen")
   private List<Seat> seats;
