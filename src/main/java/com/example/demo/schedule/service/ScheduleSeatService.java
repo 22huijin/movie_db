@@ -17,15 +17,14 @@ public class ScheduleSeatService {
 
   public List<ScheduleSeatResponseDTO> getSeatsBySchedule(Long scheduleId) {
     // schedule_id 기준으로 전체 좌석 조회 후 정렬
-    List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findBySchedule_ScheduleId(scheduleId);
-//        .stream()
-//        .sorted((a, b) -> {
-//          int rowCompare = Character.compare(a.getSeat().getRow_no(), b.getSeat().getRow_no());
-//          if (rowCompare != 0) return rowCompare;
-//          return Integer.compare(a.getSeat().getCol_no(), b.getSeat().getCol_no());
-//        })
-//        .toList();
-    System.out.println("조회된 좌석 수: " + scheduleSeats.size());
+    List<ScheduleSeat> scheduleSeats = scheduleSeatRepository.findBySchedule_ScheduleId(scheduleId)
+        .stream()
+        .sorted((a, b) -> {
+          int rowCompare = Character.compare(a.getSeat().getRow_no(), b.getSeat().getRow_no());
+          if (rowCompare != 0) return rowCompare;
+          return Integer.compare(a.getSeat().getCol_no(), b.getSeat().getCol_no());
+        })
+        .toList();
 
 
     // DTO 변환
