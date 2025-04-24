@@ -51,8 +51,8 @@ public class SeatSelectionService {
         );
       }
 
-      // PENDING 만료 처리
-      if ("PENDING".equals(ss.getStatus())) {
+      // PROCESSING 만료 처리
+      if ("PROCESSING".equals(ss.getStatus())) {
         boolean hasActive = !seatLockRepository
             .findByScheduleSeatAndExpiresAtAfter(ss, now)
             .isEmpty();
@@ -66,8 +66,8 @@ public class SeatSelectionService {
         ss.setStatus("AVAILABLE");
       }
 
-      // 5.1 상태를 PENDING 으로 변경
-      ss.setStatus("PENDING");
+      // 5.1 상태를 PROCESSING 으로 변경
+      ss.setStatus("PROCESSING");
       scheduleSeatRepository.save(ss);
 
       // 5.2 availableSeats 감소

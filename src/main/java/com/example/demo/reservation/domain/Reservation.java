@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 public class Reservation {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_seq_gen")
+  @SequenceGenerator(name = "reservation_seq_gen", sequenceName = "RESERVATION_SEQ", allocationSize = 1)
   private Long reservationId;
 
   @ManyToOne
@@ -28,7 +29,6 @@ public class Reservation {
 
   private String status;
 
-  @MapsId("scheduleSeatId")
   @ManyToOne
   @JoinColumns({
       @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id"),

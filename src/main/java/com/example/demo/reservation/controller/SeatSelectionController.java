@@ -29,8 +29,8 @@ public class SeatSelectionController {
       List<Long> lockIds = seatSelectionService.selectLockIds(dto);
 
       // 2) 요금 계산 (비트랜잭션)
-      List<LockPriceDTO> result = seatReservationService.calculatePrices(
-          dto.getScheduleId(), dto.getSeats(), lockIds
+      List<LockPriceDTO> result = seatReservationService.createReservations(
+          dto.getScheduleId(), dto.getUserId(), dto.getSeats(), lockIds
       );
 
       // 3) 최종 응답
