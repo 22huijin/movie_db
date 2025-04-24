@@ -16,11 +16,10 @@ public class SeatLock {
   @GeneratedValue
   private Long lockId;
 
-  @MapsId("scheduleSeatId")
   @ManyToOne
   @JoinColumns({
-      @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id"),
-      @JoinColumn(name = "seat_id", referencedColumnName = "seat_id")
+      @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", nullable = false),
+      @JoinColumn(name = "seat_id", referencedColumnName = "seat_id", nullable = false)
   })
   private ScheduleSeat scheduleSeat;
 
