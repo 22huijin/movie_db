@@ -6,6 +6,7 @@ import com.example.demo.reservation.domain.SeatLock;
 import com.example.demo.reservation.repository.SeatLockRepository;
 import com.example.demo.schedule.domain.ScheduleSeat;
 import com.example.demo.schedule.repository.ScheduleSeatRepository;
+import com.example.demo.schedule.repository.ScheduleRepository;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -23,48 +24,60 @@ public class SeatSelectionService {
 
   private final UserRepository userRepository;
   private final ScheduleSeatRepository scheduleSeatRepository;
+  private final ScheduleRepository scheduleRepository;
   private final SeatLockRepository seatLockRepository;
 
   @Transactional
-  public SeatSelectionResponseDTO selectSeats(SeatSelectionRequestDTO dto) {
-    Optional<User> optUser = userRepository.findById(dto.getUserId());
-    if (optUser.isEmpty()) {
-      return new SeatSelectionResponseDTO(false, "사용자가 존재하지 않습니다.", List.of());
-    }
-    User user = optUser.get();
+  public List<Long> selectLockIds(SeatSelectionRequestDTO dto) {
+    // 1. 사용자 검증
+    User user = userRepository.findById(dto.getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("사용자 정보가 없습니다."));
+
     LocalDateTime now = LocalDateTime.now();
     List<Long> lockIds = new ArrayList<>();
 
-    for (SeatSelectionRequestDTO.SeatInfo seatInfo : dto.getSeats()) {
+    // 2. 좌석별 처리
+    for (var seatInfo : dto.getSeats()) {
       ScheduleSeat ss = scheduleSeatRepository
           .findWithWriteLock(dto.getScheduleId(), seatInfo.getRowNo(), seatInfo.getColNo())
-          .orElse(null);
+          .orElseThrow(() -> new IllegalArgumentException(
+              "존재하지 않는 좌석: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo()
+          ));
 
-      if (ss == null) {
-        return new SeatSelectionResponseDTO(false,
-            "존재하지 않는 좌석입니다: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo(), List.of());
-      }
-
+      // CONFIRMED 체크
       if ("CONFIRMED".equals(ss.getStatus())) {
-        return new SeatSelectionResponseDTO(false,
-            "이미 예약된 좌석입니다: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo(), List.of());
+        throw new IllegalStateException(
+            "이미 예약된 좌석: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo()
+        );
       }
 
+      // PENDING 만료 처리
       if ("PENDING".equals(ss.getStatus())) {
-        var activeLocks = seatLockRepository.findByScheduleSeatAndExpiresAtAfter(ss, now);
-        if (!activeLocks.isEmpty()) {
-          return new SeatSelectionResponseDTO(false,
-              "이미 선택된 좌석입니다: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo(), List.of());
+        boolean hasActive = !seatLockRepository
+            .findByScheduleSeatAndExpiresAtAfter(ss, now)
+            .isEmpty();
+        if (hasActive) {
+          throw new IllegalStateException(
+              "이미 선택된 좌석: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo()
+          );
         }
+        // 만료된 lock 정리 & 상태 복구
         seatLockRepository.deleteByScheduleSeatAndExpiresAtBefore(ss, now);
         ss.setStatus("AVAILABLE");
       }
 
+      // 5.1 상태를 PENDING 으로 변경
       ss.setStatus("PENDING");
-      ScheduleSeat saved = scheduleSeatRepository.save(ss);
+      scheduleSeatRepository.save(ss);
 
-      SeatLock lock = new SeatLock();
-      lock.setScheduleSeat(saved);
+      // 5.2 availableSeats 감소
+      var schedule = scheduleRepository.findById(dto.getScheduleId()).get();
+      schedule.setAvailableSeats(schedule.getAvailableSeats() - 1);
+      scheduleRepository.save(schedule);
+
+      // 5.3 SeatLock 생성
+      var lock = new SeatLock();
+      lock.setScheduleSeat(ss);
       lock.setUser(user);
       lock.setLockedAt(now);
       lock.setExpiresAt(now.plusMinutes(10));
@@ -72,7 +85,6 @@ public class SeatSelectionService {
       lockIds.add(seatLockRepository.save(lock).getLockId());
     }
 
-    return new SeatSelectionResponseDTO(true,
-        "10분 이내에 결제하셔야 예약이 완료됩니다.", lockIds);
+    return lockIds;
   }
 }
