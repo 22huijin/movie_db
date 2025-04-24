@@ -1,26 +1,28 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@IdClass(CouponUserId.class)
+@Table(name = "COUPON_USER")
 @Getter
 @Setter
-public class CouponUser implements Serializable {
+public class CouponUser {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long couponUserId;
+
   @ManyToOne
-  @JoinColumn(name = "coupon_id")
+  @JoinColumn(name = "coupon_id", nullable = false)
   private Coupon coupon;
 
-  @Id
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
   private LocalDate validUntil;
