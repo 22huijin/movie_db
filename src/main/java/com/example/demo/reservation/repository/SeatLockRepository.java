@@ -11,4 +11,5 @@ public interface SeatLockRepository extends JpaRepository<SeatLock, Long> {
   List<SeatLock> findByScheduleSeat(ScheduleSeat scheduleSeat);
   List<SeatLock> findByScheduleSeatAndExpiresAtAfter(ScheduleSeat scheduleSeat, LocalDateTime now);
   void deleteByScheduleSeatAndExpiresAtBefore(ScheduleSeat scheduleSeat, LocalDateTime now);
+  List<SeatLock> findByExpiresAtBefore(LocalDateTime now);
 }
