@@ -1,6 +1,8 @@
 package com.example.demo.reservation.service;
 
+import com.example.demo.reservation.domain.Reservation;
 import com.example.demo.reservation.domain.SeatLock;
+import com.example.demo.reservation.repository.ReservationRepository;
 import com.example.demo.reservation.repository.SeatLockRepository;
 import com.example.demo.schedule.domain.ScheduleSeat;
 import com.example.demo.schedule.repository.ScheduleSeatRepository;
@@ -17,15 +19,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatLockCleanupService {
 
-  private final SeatLockRepository      seatLockRepository;
-  private final ScheduleSeatRepository  scheduleSeatRepository;
-  private final ScheduleRepository      scheduleRepository;
+  private final SeatLockRepository seatLockRepository;
+  private final ScheduleSeatRepository scheduleSeatRepository;
+  private final ScheduleRepository scheduleRepository;
+  private final ReservationRepository reservationRepository;
 
   /**
-   * 10분마다(기본) 만료된 SeatLock을 정리합니다.
-   * @Scheduled cron, fixedDelay 등 원하는 주기로 변경 가능
+   * 만료된 SeatLock, 관련 ScheduleSeat 상태, Reservation까지 복구 및 삭제
    */
-  @Scheduled(fixedDelayString = "${seatlock.cleanup.delay:600000}") // 600,000ms = 10분
+  @Scheduled(fixedDelayString = "${seatlock.cleanup.delay:600000}")
   @Transactional
   public void cleanupExpiredLocks() {
     LocalDateTime now = LocalDateTime.now();
@@ -38,12 +40,16 @@ public class SeatLockCleanupService {
       ss.setStatus("AVAILABLE");
       scheduleSeatRepository.save(ss);
 
-      // 2) Schedule.availableSeats 복구
+      // 2) Schedule의 availableSeats 복구
       var schedule = ss.getSchedule();
       schedule.setAvailableSeats(schedule.getAvailableSeats() + 1);
       scheduleRepository.save(schedule);
 
-      // 3) SeatLock 삭제
+      // 3) Reservation 삭제 (좌석에 연결된 예약)
+      reservationRepository.findByScheduleSeat(ss)
+          .ifPresent(reservationRepository::delete);
+
+      // 4) SeatLock 삭제
       seatLockRepository.delete(lock);
     }
   }

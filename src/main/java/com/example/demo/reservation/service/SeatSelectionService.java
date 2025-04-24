@@ -2,6 +2,7 @@ package com.example.demo.reservation.service;
 
 import com.example.demo.reservation.dto.SeatSelectionRequestDTO;
 import com.example.demo.reservation.dto.SeatSelectionResponseDTO;
+import com.example.demo.reservation.repository.ReservationRepository;
 import com.example.demo.reservation.domain.SeatLock;
 import com.example.demo.reservation.repository.SeatLockRepository;
 import com.example.demo.schedule.domain.ScheduleSeat;
@@ -26,6 +27,7 @@ public class SeatSelectionService {
   private final ScheduleSeatRepository scheduleSeatRepository;
   private final ScheduleRepository scheduleRepository;
   private final SeatLockRepository seatLockRepository;
+  private final ReservationRepository reservationRepository;
 
   @Transactional
   public List<Long> selectLockIds(SeatSelectionRequestDTO dto) {
@@ -61,6 +63,10 @@ public class SeatSelectionService {
               "이미 선택된 좌석: " + seatInfo.getRowNo() + "-" + seatInfo.getColNo()
           );
         }
+        // 관련된 Reservation 삭제
+        reservationRepository.findByScheduleSeat(ss)
+            .ifPresent(reservationRepository::delete);
+
         // 만료된 lock 정리 & 상태 복구
         seatLockRepository.deleteByScheduleSeatAndExpiresAtBefore(ss, now);
         ss.setStatus("AVAILABLE");
