@@ -31,7 +31,4 @@ public class Schedule {
   private LocalDateTime endTime;
   private int availableSeats;
   private int price;
-
-  @OneToMany(mappedBy = "schedule")
-  private List<Reservation> reservations;
 }
