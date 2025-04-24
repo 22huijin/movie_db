@@ -8,12 +8,13 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "seats")
+@Table(name = "seat")
 @Getter
 @Setter
 public class Seat {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seat_seq_gen")
+  @SequenceGenerator(name = "seat_seq_gen", sequenceName = "SEAT_SEQ", allocationSize = 1)
   private Long seatId;
 
   @ManyToOne
