@@ -24,7 +24,7 @@ public class SeatSelectionRequestDTO {
     @Schema(description = "열 좌석 (int)", example = "5", required = true)
     private int colNo;
 
-    @Schema(description = "사용자 타입(Adult/Child 등)", example = "Adult", required = true)
+    @Schema(description = "사용자 타입", example = "Adult", required = true)
     private String userType;
   }
 }

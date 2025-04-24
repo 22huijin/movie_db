@@ -18,18 +18,17 @@ public class PricingPolicy {
       sequenceName = "PRICINGPOLICY_SEQ",
       allocationSize = 1
   )
-
   @Column(name = "PRICE_ID")
   private Long priceId;
 
   @Column(name = "DAY_TYPE", nullable = false)
-  private String dayType;      // Weekday / Weekend
+  private String dayType;
 
   @Column(name = "TIME_RANGE", nullable = false)
-  private String timeRange;    // 0-6 / 6-10 / 10-24
+  private String timeRange;
 
   @Column(name = "USER_TYPE", nullable = false)
-  private String userType;     // Adult / Child 등
+  private String userType;
 
   @Column(name = "PRICE", nullable = false)
   private Integer price;
