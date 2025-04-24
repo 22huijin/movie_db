@@ -15,7 +15,8 @@ import java.util.List;
 @Setter
 public class Schedule {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_seq_gen")
+  @SequenceGenerator(name = "schedule_seq_gen", sequenceName = "SCHEDULE_SEQ", allocationSize = 1)
   private Long scheduleId;
 
   @ManyToOne
