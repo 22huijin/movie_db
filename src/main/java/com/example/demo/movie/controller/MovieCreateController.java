@@ -1,7 +1,7 @@
 package com.example.demo.movie.controller;
 
 import com.example.demo.movie.dto.MovieCreateRequestDTO;
-import com.example.demo.movie.service.MovieCommandService;
+import com.example.demo.movie.service.MovieCreateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/movies")
 @Tag(name = "영화 등록 API", description = "영화 등록 API")
-public class MovieCommandController {
+public class MovieCreateController {
 
     @Autowired
-    private MovieCommandService movieCommandService;
+    private MovieCreateService movieCommandService;
 
     @Operation(summary = "영화 등록", description = "영화 정보를 입력받아 영화 기본 정보와 세부 정보를 movie 테이블 및 movie_detail 테이블에 저장합니다.")
     @ApiResponses({

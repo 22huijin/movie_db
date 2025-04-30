@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MovieService {
+public class MovieSimpleService {
 
     private final MovieRepository movieRepository;
 
