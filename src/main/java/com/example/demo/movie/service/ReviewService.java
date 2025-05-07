@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -30,7 +32,18 @@ public class ReviewService {
         review.setUser(user);
         review.setMovie(movie);
         review.setRating(dto.getRating());
+        reviewRepository.save(review);
 
-        return reviewRepository.save(review);
+        // 🔥 리뷰 등록 후 평점 평균 계산
+        List<Review> reviews = reviewRepository.findByMovie_MovieId(movie.getMovieId());
+        float avgRating = (float) reviews.stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+
+        movie.setLikeRating(avgRating);
+        movieRepository.save(movie); // 평점 업데이트 반영
+
+        return review;
     }
 }
