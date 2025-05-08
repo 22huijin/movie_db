@@ -1,4 +1,4 @@
-package com.example.demo.user.domain;
+package com.example.demo.coupon.domain;
 
 import com.example.demo.user.domain.User;
 import jakarta.persistence.*;
@@ -14,7 +14,8 @@ import java.time.LocalDate;
 public class CouponUser {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_user_seq_gen")
+  @SequenceGenerator(name = "coupon_user_seq_gen", sequenceName = "COUPON_USER_SEQ", allocationSize = 1)
   private Long couponUserId;
 
   @ManyToOne
@@ -26,4 +27,6 @@ public class CouponUser {
   private User user;
 
   private LocalDate validUntil;
+
+  private String status;
 }

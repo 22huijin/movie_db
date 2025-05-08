@@ -1,7 +1,7 @@
-package com.example.demo.user.repository;
+package com.example.demo.coupon.repository;
 
-import com.example.demo.user.domain.CouponUser;
-import com.example.demo.user.domain.CouponUserId;
+import com.example.demo.coupon.domain.CouponUser;
+import com.example.demo.coupon.domain.CouponUserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CouponUserRepository extends JpaRepository<CouponUser, CouponUserId> {

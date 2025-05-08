@@ -1,4 +1,4 @@
-package com.example.demo.user.domain;
+package com.example.demo.coupon.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

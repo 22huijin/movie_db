@@ -1,5 +1,6 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.coupon.domain.CouponUser;
 import com.example.demo.reservation.domain.Reservation;
 import com.example.demo.reservation.domain.SeatLock;
 import com.example.demo.movie.domain.Review;
