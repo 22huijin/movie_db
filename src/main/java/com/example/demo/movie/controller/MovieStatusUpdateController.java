@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 @Tag(name = "상영상태 갱신", description = "오늘 날짜와 개봉일 비교해 상영상태 갱신하는 API")
 public class MovieStatusUpdateController {
 

@@ -17,7 +17,7 @@ public class MovieSimpleController {
 
     private final MovieSimpleService movieService;
 
-    @GetMapping("/status")
+    @GetMapping("/simple")
     @Operation(summary = "상영작/예정작 조회", description = "영화의 상영 상태(상영중/상영예정)에 따라 목록을 조회합니다.")
     public List<MovieSimpleResponseDTO> getMoviesByStatus(@RequestParam String status) {
         return movieService.getMoviesByStatus(status);
