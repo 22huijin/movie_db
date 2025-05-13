@@ -30,10 +30,12 @@
 //                .addPathPatterns(
 //                        "/api/admin/**",
 //                        "/api/movies/create",
+//                        "api/movies/{movieId}/status/end",
+//                        "api/movies/{movieId}/update",
 //                        "/api/schedules/register",
 //                        "/api/schedules/delete",
 //                        "/api/screens/**",
-//                        "/api/coupons/issue/**"
+//                        "/api/coupons/issue/**",
 //                );
 //    }
 //}
