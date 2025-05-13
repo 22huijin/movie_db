@@ -19,6 +19,11 @@ public class LoginService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
 
+        // 회원 상태가 "withdraw"인 경우 로그인 불가
+        if ("withdraw".equals(user.getStatus())) {
+            throw new IllegalArgumentException("탈퇴처리된 회원입니다.");
+        }
+
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
@@ -31,3 +36,4 @@ public class LoginService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
     }
 }
+

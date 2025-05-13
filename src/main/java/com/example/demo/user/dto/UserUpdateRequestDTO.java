@@ -1,3 +1,4 @@
+// UserUpdateRequestDTO.java
 package com.example.demo.user.dto;
 
 import lombok.Getter;
@@ -8,6 +9,6 @@ import lombok.Setter;
 public class UserUpdateRequestDTO {
     private String email;
     private String nickname;
-    private String password;
-    private String birthDate; // yyyy-MM-dd 형식
+    private String password;     // 새 비밀번호
+    private String birthDate;    // yyyy-MM-dd
 }
