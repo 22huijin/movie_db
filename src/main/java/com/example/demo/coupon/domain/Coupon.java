@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,7 @@ public class Coupon {
   private Long couponId;
 
   private String couponName;
-  private int discountAmount;
+  private BigDecimal discountAmount;
 
   @OneToMany(mappedBy = "coupon")
   private List<CouponUser> couponUsers;
