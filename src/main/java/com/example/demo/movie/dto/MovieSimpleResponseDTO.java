@@ -28,4 +28,7 @@ public class MovieSimpleResponseDTO {
 
     @Schema(description = "상영 상태", example = "상영중") // 또는 "개봉예정"
     private String status;
+
+    @Schema(description = "영화 평점", example = "4.8")
+    private double likeRating;
 }

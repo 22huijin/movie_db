@@ -24,7 +24,8 @@ public class MovieSimpleService {
                         movie.getThumbnailUrl(),
                         movie.getRunningTime(),
                         movie.getReleaseDate(),
-                        movie.getStatus()
+                        movie.getStatus(),
+                        movie.getLikeRating()
                 ))
                 .collect(Collectors.toList());
     }

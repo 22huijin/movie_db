@@ -13,7 +13,15 @@ import java.time.LocalDateTime;
 @Setter
 public class SeatLock {
   @Id
-  @GeneratedValue
+  @SequenceGenerator(
+          name = "seat_lock_seq",
+          sequenceName = "seat_lock_seq",
+          allocationSize = 1 // DB와 동일하게 맞추기
+  )
+  @GeneratedValue(
+          strategy = GenerationType.SEQUENCE,
+          generator = "seat_lock_seq"
+  )
   private Long lockId;
 
   @MapsId("scheduleSeatId")

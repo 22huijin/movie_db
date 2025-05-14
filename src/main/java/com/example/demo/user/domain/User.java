@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,14 @@ public class User {
 
   private String password;
 
-  @Column(unique = true)
-  private String phoneNumber;
-
   private String membershipType;
+
+  private String role;
+
+  private LocalDate birthDate;     // 생일
+  private LocalDate joinDate;   // 가입일
+
+  private String status = "active";
 
   @OneToMany(mappedBy = "user")
   private List<Reservation> reservations;
