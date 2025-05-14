@@ -13,3 +13,4 @@ public class UserSignUpRequestDTO {
     private String password;
     private LocalDate birthDate;
 }
+

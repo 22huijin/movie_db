@@ -1,5 +1,6 @@
 package com.example.demo.user.domain;
 
+import com.example.demo.coupon.domain.CouponUser;
 import com.example.demo.reservation.domain.Reservation;
 import com.example.demo.reservation.domain.SeatLock;
 import com.example.demo.movie.domain.Review;
@@ -32,9 +33,10 @@ public class User {
   private String role;
 
   private LocalDate birthDate;     // 생일
+
   private LocalDate joinDate;   // 가입일
 
-  private String status = "active";
+  private String status = "active";  // 탈퇴 여부
 
   @OneToMany(mappedBy = "user")
   private List<Reservation> reservations;

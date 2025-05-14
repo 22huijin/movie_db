@@ -15,15 +15,15 @@ import java.time.LocalDate;
 public class UserSignUpService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // 비밀번호 인코더 주입
+    private final PasswordEncoder passwordEncoder;
 
     public UserSignUpResponseDTO signup(UserSignUpRequestDTO dto) {
         User user = new User();
         user.setNickname(dto.getNickname());
         user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword())); // 비밀번호 암호화
-        user.setMembershipType("WELCOME"); // 고정
-        user.setRole("USER"); // 고정
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setMembershipType("WELCOME");
+        user.setRole("USER");
         user.setBirthDate(dto.getBirthDate());
         user.setJoinDate(LocalDate.now());
 
@@ -40,3 +40,4 @@ public class UserSignUpService {
         );
     }
 }
+

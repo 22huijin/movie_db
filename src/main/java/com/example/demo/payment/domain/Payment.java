@@ -1,7 +1,7 @@
 package com.example.demo.payment.domain;
 
 import com.example.demo.reservation.domain.Reservation;
-import com.example.demo.user.domain.CouponUser;
+import com.example.demo.coupon.domain.CouponUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

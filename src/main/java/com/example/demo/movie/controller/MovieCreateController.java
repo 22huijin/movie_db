@@ -23,7 +23,7 @@ public class MovieCreateController {
             @ApiResponse(responseCode = "201", description = "영화 등록 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void createMovie(@RequestBody MovieCreateRequestDTO movieCreateRequestDTO) {
         movieCommandService.createMovie(movieCreateRequestDTO);
