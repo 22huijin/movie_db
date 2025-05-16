@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "상영관 등록", description = "상영관 및 좌석 등록 API")
+@Tag(name = "상영관", description = "상영관 및 좌석 API")
 @RestController
 @RequestMapping("/api/screens")
 @RequiredArgsConstructor

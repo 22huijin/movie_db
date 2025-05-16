@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.List;
 
-@Tag(name = "좌석 조회", description = "좌석 조회 API")
+@Tag(name = "상영일정", description = "상영일정 관련 API")
 @RestController
 @RequestMapping("/api/schedules")
 @RequiredArgsConstructor

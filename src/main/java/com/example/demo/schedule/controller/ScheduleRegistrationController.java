@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "상영스케줄 등록", description = "상영스케줄 및 관련 좌석 등록 API")
+@Tag(name = "상영일정", description = "상영일정 관련 API")
 @RestController
 @RequestMapping("/api/schedules")
 @RequiredArgsConstructor
