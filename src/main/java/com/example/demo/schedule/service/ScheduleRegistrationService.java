@@ -57,7 +57,7 @@ public class ScheduleRegistrationService {
     schedule.setStartTime(dto.getStartTime());
     schedule.setEndTime(dto.getEndTime());
     schedule.setAvailableSeats(screen.getTotalSeats());
-    schedule.setPrice(dto.getPrice());
+//    schedule.setPrice(dto.getPrice());
 
     final Schedule savedSchedule = scheduleRepository.save(schedule);
 

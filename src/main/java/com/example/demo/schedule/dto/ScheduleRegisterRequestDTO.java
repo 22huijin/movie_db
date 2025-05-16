@@ -20,6 +20,6 @@ public class ScheduleRegisterRequestDTO {
   @Schema(description = "상영 종료 시간", example = "2025-05-02T16:00:00")
   private LocalDateTime endTime;
 
-  @Schema(description = "가격", example = "13000")
-  private int price;
+//  @Schema(description = "가격", example = "13000")
+//  private int price;
 }

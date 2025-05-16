@@ -29,6 +29,6 @@ public class ScheduleResponseDTO {
   @Schema(description = "잔여 좌석 수", example = "37")
   private int availableSeats;
 
-  @Schema(description = "가격", example = "12000")
-  private int price;
+//  @Schema(description = "가격", example = "12000")
+//  private int price;
 }

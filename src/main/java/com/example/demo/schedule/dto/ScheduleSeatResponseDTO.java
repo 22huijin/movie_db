@@ -15,5 +15,4 @@ public class ScheduleSeatResponseDTO {
 
   @Schema(description = "좌석 상태 (AVAILABLE / RESERVED)", example = "AVAILABLE")
   private String status;
-
 }
