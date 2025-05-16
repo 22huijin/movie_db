@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Payment {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long paymentId;
@@ -26,7 +25,7 @@ public class Payment {
   @JoinColumn(name = "coupon_user_id")
   private CouponUser couponUser;
 
-  private Integer finalPrice;
+  private int finalPrice;
 
   private String paymentStatus;
 }

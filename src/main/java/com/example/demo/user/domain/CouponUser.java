@@ -1,17 +1,16 @@
 package com.example.demo.user.domain;
 
-import com.example.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "COUPON_USER")
 @Getter
 @Setter
-public class CouponUser {
+public class CouponUser implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
