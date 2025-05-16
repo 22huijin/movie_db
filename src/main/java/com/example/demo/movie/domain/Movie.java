@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 public class Movie {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_seq_gen")
+  @SequenceGenerator(name = "movie_seq_gen", sequenceName = "MOVIE_SEQ", allocationSize = 1)
   private Long movieId;
 
   private String title;
