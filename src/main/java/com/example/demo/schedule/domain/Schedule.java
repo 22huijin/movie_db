@@ -30,5 +30,5 @@ public class Schedule {
   private LocalDateTime startTime;
   private LocalDateTime endTime;
   private int availableSeats;
-  private int price;
+//  private int price;
 }

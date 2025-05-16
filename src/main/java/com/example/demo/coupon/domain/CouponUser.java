@@ -1,19 +1,21 @@
-package com.example.demo.user.domain;
+package com.example.demo.coupon.domain;
 
+import com.example.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.io.Serializable;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "COUPON_USER")
 @Getter
 @Setter
-public class CouponUser implements Serializable {
+public class CouponUser {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_user_seq_gen")
+  @SequenceGenerator(name = "coupon_user_seq_gen", sequenceName = "COUPON_USER_SEQ", allocationSize = 1)
   private Long couponUserId;
 
   @ManyToOne
@@ -25,4 +27,6 @@ public class CouponUser implements Serializable {
   private User user;
 
   private LocalDate validUntil;
+
+  private String status;
 }

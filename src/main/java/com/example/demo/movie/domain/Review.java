@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 public class Review {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_seq_gen")
+  @SequenceGenerator(name = "review_seq_gen", sequenceName = "REVIEW_SEQ", allocationSize = 1)
   private Long reviewId;
 
   @ManyToOne
