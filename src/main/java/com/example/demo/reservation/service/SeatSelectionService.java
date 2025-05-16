@@ -71,7 +71,7 @@ public class SeatSelectionService {
         seatLockRepository.deleteByScheduleSeatAndExpiresAtBefore(ss, now);
         ss.setStatus("AVAILABLE");
       }
-
+      //세이브포인트
       // 5.1 상태를 PROCESSING 으로 변경
       ss.setStatus("PROCESSING");
       scheduleSeatRepository.save(ss);

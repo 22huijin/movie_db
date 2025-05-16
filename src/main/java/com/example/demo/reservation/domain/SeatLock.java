@@ -12,20 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SeatLock {
+
   @Id
-  @SequenceGenerator(
-      name = "seat_lock_seq",
-      sequenceName = "seat_lock_seq",
-      allocationSize = 1
-  )
-  @GeneratedValue(
-      strategy = GenerationType.SEQUENCE,
-      generator = "seat_lock_seq"
-  )
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seat_lock_seq")
+  @SequenceGenerator(name = "seat_lock_seq", sequenceName = "seat_lock_seq", allocationSize = 1)
   private Long lockId;
 
-  @MapsId("scheduleSeatId")
-  @ManyToOne
+  @ManyToOne(optional = false)
   @JoinColumns({
       @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id"),
       @JoinColumn(name = "seat_id", referencedColumnName = "seat_id")
