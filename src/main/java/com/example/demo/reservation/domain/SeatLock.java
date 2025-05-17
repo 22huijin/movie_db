@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SeatLock {
-
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seat_lock_seq")
   @SequenceGenerator(name = "seat_lock_seq", sequenceName = "seat_lock_seq", allocationSize = 1)
