@@ -67,6 +67,7 @@ public class PaymentService {
       ScheduleSeat ss = lock.getScheduleSeat();
       Reservation reservation = reservationRepository.findByScheduleSeat(ss)
           .orElseThrow(() -> new IllegalStateException("예약 정보가 없습니다."));
+      reservation.setStatus("CONFIRMED");
 
       PricingPolicy pricingPolicy = reservation.getPricingPolicy();
       int price = pricingPolicy.getPrice();
