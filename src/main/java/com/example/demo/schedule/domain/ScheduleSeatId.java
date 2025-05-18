@@ -19,14 +19,6 @@ public class ScheduleSeatId implements Serializable {
   private Long scheduleId;
   private Long seatId;
 
-  // 필수: 기본 생성자
-  public ScheduleSeatId() {}
-
-  public ScheduleSeatId(Long scheduleId, Long seatId) {
-    this.scheduleId = scheduleId;
-    this.seatId = seatId;
-  }
-
   // equals override
   @Override
   public boolean equals(Object o) {
