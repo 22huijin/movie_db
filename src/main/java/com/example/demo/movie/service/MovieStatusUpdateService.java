@@ -22,8 +22,8 @@ public class MovieStatusUpdateService {
         List<Movie> movies = movieRepository.findAll();
 
         for (Movie movie : movies) {
-            if (!today.isBefore(movie.getReleaseDate()) && "상영예정".equals(movie.getStatus())) {
-                movie.setStatus("상영중");
+            if (!today.isBefore(movie.getReleaseDate()) && "UPCOMING".equals(movie.getStatus())) {
+                movie.setStatus("SHOWING");
                 movieRepository.save(movie);
             }
         }

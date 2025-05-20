@@ -34,7 +34,7 @@ public class ReviewService {
         review.setRating(dto.getRating());
         reviewRepository.save(review);
 
-        // 🔥 리뷰 등록 후 평점 평균 계산
+        // 리뷰 등록 후 평점 평균 계산
         List<Review> reviews = reviewRepository.findByMovie_MovieId(movie.getMovieId());
         float avgRating = (float) reviews.stream()
                 .mapToDouble(Review::getRating)

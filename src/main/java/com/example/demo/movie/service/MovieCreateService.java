@@ -29,12 +29,12 @@ public class MovieCreateService {
         movie.setAgeRating(movieCreateRequestDTO.getAgeRating());
         movie.setDescription(movieCreateRequestDTO.getDescription());
 
-        // '상영중' 또는 '상영예정' 결정
+        // 'SHOWING' 또는 'UPCOMING' 결정
         LocalDate today = LocalDate.now();
         if (movieCreateRequestDTO.getReleaseDate().isBefore(today) || movieCreateRequestDTO.getReleaseDate().isEqual(today)) {
-            movie.setStatus("상영중");
+            movie.setStatus("SHOWING");
         } else {
-            movie.setStatus("상영예정");
+            movie.setStatus("UPCOMING");
         }
 
         // likeRating, totalAudience는 기본값 0으로 설정

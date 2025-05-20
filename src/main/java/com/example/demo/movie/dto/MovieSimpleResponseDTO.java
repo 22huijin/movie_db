@@ -26,7 +26,7 @@ public class MovieSimpleResponseDTO {
     @Schema(description = "개봉일", example = "2025-04-17")
     private LocalDate releaseDate;
 
-    @Schema(description = "상영 상태", example = "상영중") // 또는 "개봉예정"
+    @Schema(description = "상영 상태", example = "SHOWING") // 또는 "UPCOMING"
     private String status;
 
     @Schema(description = "영화 평점", example = "4.8")

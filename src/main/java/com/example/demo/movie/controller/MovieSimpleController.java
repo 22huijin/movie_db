@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "영화", description = "영화 등록 및 조회 관련 API")
 @RestController
 @RequestMapping("/api/movies")
 @RequiredArgsConstructor
-@Tag(name = "영화 기본 정보 조회 API", description = "영화 기본 정보 조회 API")
 public class MovieSimpleController {
 
     private final MovieSimpleService movieService;
 
     @GetMapping("/simple")
-    @Operation(summary = "상영작/예정작 조회", description = "영화의 상영 상태(상영중/상영예정)에 따라 목록을 조회합니다.")
+    @Operation(summary = "상영작/예정작 조회", description = "영화의 상영 상태(SHOWING/UPCOMING)에 따라 목록을 조회합니다.")
     public List<MovieSimpleResponseDTO> getMoviesByStatus(@RequestParam String status) {
         return movieService.getMoviesByStatus(status);
     }

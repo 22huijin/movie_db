@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User API", description = "회원 관련 테스트 API")
+@Tag(name = "회원 관리", description = "회원가입, 회원정보 수정, 탈퇴 관련 API")
 public class UserController {
 
     private final UserRepository userRepository;

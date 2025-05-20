@@ -36,9 +36,9 @@ public class MovieUpdateService {
         // releaseDate에 따라 status 자동 설정
         LocalDate today = LocalDate.now();
         if (request.getReleaseDate().isAfter(today)) {
-            movie.setStatus("상영예정");
+            movie.setStatus("UPCOMING");
         } else {
-            movie.setStatus("상영중");
+            movie.setStatus("SHOWING");
         }
 
         // MovieDetail도 수정

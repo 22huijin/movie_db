@@ -16,7 +16,7 @@ public class MovieCloseService {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found with ID: " + movieId));
 
-        movie.setStatus("상영종료");
+        movie.setStatus("ENDED");
         movieRepository.save(movie);
     }
 }

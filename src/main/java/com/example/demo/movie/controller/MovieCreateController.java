@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/movies")
-@Tag(name = "영화 등록 API", description = "영화 등록 API")
+@Tag(name = "영화", description = "영화 등록 및 조회 관련 API")
 public class MovieCreateController {
 
     @Autowired

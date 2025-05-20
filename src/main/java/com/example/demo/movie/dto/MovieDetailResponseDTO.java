@@ -30,7 +30,7 @@ public class MovieDetailResponseDTO {
     @Schema(description = "개봉일", example = "2025-04-17")
     private String releaseDate;
 
-    @Schema(description = "상영 상태", example = "상영중")
+    @Schema(description = "상영 상태", example = "SHOWING")
     private String status;
 
     @Schema(description = "예고편 URL", example = "https://youtube.com/trailer")
