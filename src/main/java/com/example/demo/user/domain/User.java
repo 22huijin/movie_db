@@ -4,6 +4,7 @@ import com.example.demo.coupon.domain.CouponUser;
 import com.example.demo.reservation.domain.Reservation;
 import com.example.demo.reservation.domain.SeatLock;
 import com.example.demo.movie.domain.Review;
+import com.example.demo.membership.domain.MembershipType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,9 @@ public class User {
 
   private String password;
 
-  private String membershipType;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "membership_type_id")
+  private MembershipType membershipType;
 
   private String role;
 

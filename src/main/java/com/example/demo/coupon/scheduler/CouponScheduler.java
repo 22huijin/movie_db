@@ -9,6 +9,7 @@ import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,34 +22,36 @@ public class CouponScheduler {
     private final CouponRepository couponRepository;
     private final CouponUserRepository couponUserRepository;
 
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정
+    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정 실행
+    @Transactional
     public void issueScheduledCoupons() {
         LocalDate today = LocalDate.now();
 
-        // 가입일이 오늘인 FRIENDS, VIP
-        List<User> joinTodayUsers = userRepository.findByJoinDate(today);
+        // 오늘 가입한 회원 중 FRIENDS 또는 VIP에게 쿠폰 발급 (couponId = 2)
+        List<User> joinTodayUsers = userRepository.findByJoinDateWithMembership(today);
         for (User user : joinTodayUsers) {
-            if (user.getMembershipType().equals("FRIENDS") || user.getMembershipType().equals("VIP")) {
-                issueCoupon(user, 2L); // 반값 쿠폰
+            String membership = user.getMembershipType().getMembershipName();
+            if ("FRIENDS".equals(membership) || "VIP".equals(membership)) {
+                issueCoupon(user, 2L);
             }
         }
 
-        // 생일이 오늘인 VIP
-        List<User> birthdayUsers = userRepository.findByBirthDate(today);
+        // 오늘 생일인 VIP 회원에게 쿠폰 발급 (couponId = 3)
+        List<User> birthdayUsers = userRepository.findByBirthDateWithMembership(today);
         for (User user : birthdayUsers) {
-            if (user.getMembershipType().equals("VIP")) {
-                issueCoupon(user, 3L); // 전액 쿠폰
+            if ("VIP".equals(user.getMembershipType().getMembershipName())) {
+                issueCoupon(user, 3L);
             }
         }
     }
 
     private void issueCoupon(User user, Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow();
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰이 없습니다. id: " + couponId));
+
         CouponUser couponUser = new CouponUser();
         couponUser.setUser(user);
         couponUser.setCoupon(coupon);
-        couponUser.setStatus("unused");
-        couponUser.setValidUntil(LocalDate.now().plusMonths(1));
         couponUserRepository.save(couponUser);
     }
 }

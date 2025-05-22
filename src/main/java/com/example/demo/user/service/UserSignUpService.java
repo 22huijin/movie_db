@@ -1,5 +1,7 @@
 package com.example.demo.user.service;
 
+import com.example.demo.membership.domain.MembershipType;
+import com.example.demo.membership.repository.MembershipTypeRepository;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.dto.UserSignUpRequestDTO;
 import com.example.demo.user.dto.UserSignUpResponseDTO;
@@ -16,13 +18,17 @@ public class UserSignUpService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MembershipTypeRepository membershipTypeRepository;
 
     public UserSignUpResponseDTO signup(UserSignUpRequestDTO dto) {
+        MembershipType welcomeMembership = membershipTypeRepository.findByMembershipName("WELCOME")
+                .orElseThrow(() -> new IllegalStateException("WELCOME 멤버십 타입이 존재하지 않습니다."));
+
         User user = new User();
         user.setNickname(dto.getNickname());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setMembershipType("WELCOME");
+        user.setMembershipType(welcomeMembership);  // 문자열 X, 객체 O
         user.setRole("USER");
         user.setBirthDate(dto.getBirthDate());
         user.setJoinDate(LocalDate.now());
@@ -33,11 +39,10 @@ public class UserSignUpService {
                 savedUser.getUserId(),
                 savedUser.getNickname(),
                 savedUser.getEmail(),
-                savedUser.getMembershipType(),
+                savedUser.getMembershipType().getMembershipName(), // 이름 추출
                 savedUser.getRole(),
                 savedUser.getBirthDate(),
                 savedUser.getJoinDate()
         );
     }
 }
-
