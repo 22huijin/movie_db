@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "회원 관리", description = "회원가입, 회원정보 수정, 탈퇴 관련 API")
+@Tag(name = "마이페이지", description = "회원정보 조회/영화 찜/내 리뷰 모아보기 API")
 public class UserInfoController {
 
     @Autowired
