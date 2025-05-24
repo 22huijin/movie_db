@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "리뷰 생성 요청 DTO")
-public class ReviewDTO {
+public class ReviewRequestDTO {
 
     @Schema(description = "리뷰를 작성한 사용자 ID", example = "1")
     private Long userId;

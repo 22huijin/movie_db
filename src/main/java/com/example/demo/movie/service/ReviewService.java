@@ -2,7 +2,8 @@ package com.example.demo.movie.service;
 
 import com.example.demo.movie.domain.Movie;
 import com.example.demo.movie.domain.Review;
-import com.example.demo.movie.dto.ReviewDTO;
+import com.example.demo.movie.dto.ReviewRequestDTO;
+import com.example.demo.movie.dto.ReviewResponseDTO;
 import com.example.demo.movie.repository.MovieRepository;
 import com.example.demo.movie.repository.ReviewRepository;
 import com.example.demo.user.domain.User;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class ReviewService {
     private final MovieRepository movieRepository;
 
     @Transactional
-    public Review createReview(ReviewDTO dto) {
+    public Review createReview(ReviewRequestDTO dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -45,5 +47,12 @@ public class ReviewService {
         movieRepository.save(movie); // 평점 업데이트 반영
 
         return review;
+    }
+
+    public List<ReviewResponseDTO> getReviewsByUserId(Long userId) {
+        List<Review> reviews = reviewRepository.findByUserUserId(userId);
+        return reviews.stream()
+                .map(review -> new ReviewResponseDTO(review.getMovie().getMovieId(), review.getRating()))
+                .collect(Collectors.toList());
     }
 }
