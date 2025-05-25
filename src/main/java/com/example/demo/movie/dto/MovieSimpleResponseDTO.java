@@ -1,5 +1,6 @@
 package com.example.demo.movie.dto;
 
+import com.example.demo.movie.domain.Movie;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,4 +32,17 @@ public class MovieSimpleResponseDTO {
 
     @Schema(description = "영화 평점", example = "4.8")
     private double likeRating;
+
+    public static MovieSimpleResponseDTO fromEntity(Movie movie) {
+        return new MovieSimpleResponseDTO(
+                movie.getMovieId(),
+                movie.getTitle(),
+                movie.getThumbnailUrl(),
+                movie.getRunningTime(),
+                movie.getReleaseDate(),
+                movie.getStatus(),
+                movie.getLikeRating()
+        );
+    }
+
 }
