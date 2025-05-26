@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CouponUser {
-
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_user_seq_gen")
   @SequenceGenerator(name = "coupon_user_seq_gen", sequenceName = "COUPON_USER_SEQ", allocationSize = 1)
