@@ -29,6 +29,10 @@ public class PaymentCancelService {
     Reservation reservation = reservationRepository.findById(reservationId)
         .orElseThrow(() -> new IllegalArgumentException("예약 정보를 찾을 수 없습니다."));
 
+    if ("CANCEL".equalsIgnoreCase(reservation.getStatus())) {
+      return new PaymentCancelResponseDto(false, "이미 결제 취소가 처리되었습니다.");
+    }
+
     reservation.setStatus("CANCEL");
     reservation.setUpdateTime(LocalDateTime.now());
 
