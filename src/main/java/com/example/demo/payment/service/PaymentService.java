@@ -78,7 +78,15 @@ public class PaymentService {
       if (detail.getCouponUserId() != null) {
         couponUser = couponUserRepository.findById(detail.getCouponUserId())
             .orElseThrow(() -> new IllegalArgumentException("쿠폰 정보가 없습니다."));
+        // 이미 사용된 쿠폰인지 확인
+        if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
+          return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
+        }
+        // 쿠폰 금액 차감
         finalPrice = price - couponUser.getCoupon().getDiscountAmount().intValue();
+        // 쿠폰 상태를 'USED'로 변경
+        couponUser.setStatus("used");
+        couponUserRepository.save(couponUser);
       }
 
       Payment payment = new Payment();
