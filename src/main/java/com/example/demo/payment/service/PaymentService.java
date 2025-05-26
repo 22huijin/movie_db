@@ -77,22 +77,26 @@ public class PaymentService {
       Integer finalPrice = price;
       CouponUser couponUser = null;
 
-      if (detail.getCouponUserId() != null) {
-        couponUser = couponUserRepository.findById(detail.getCouponUserId())
-            .orElseThrow(() -> new IllegalArgumentException("쿠폰 정보가 없습니다."));
-        // 이미 사용된 쿠폰인지 확인
-        if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
-          return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
-        }
-        // 할인율 적용 계산
-        BigDecimal discount = couponUser.getCoupon().getDiscountAmount(); // 0.1, 0.5 등
-        BigDecimal multiplier = BigDecimal.ONE.subtract(discount);         // 1 - 할인율
-        BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
-        finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
-        // 쿠폰 상태를 'USED'로 변경
-        couponUser.setStatus("used");
-        couponUserRepository.save(couponUser);
+      if (detail.getCouponUserId() == null) {
+        return new PaymentResponseDTO(false, "유효한 쿠폰이 아닙니다.");
       }
+      couponUser = couponUserRepository.findById(detail.getCouponUserId()).orElse(null);
+      if (couponUser == null) {
+        return new PaymentResponseDTO(false, "쿠폰 정보가 없습니다.");
+      }
+      if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
+        return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
+      }
+
+      // 할인율 적용 계산
+      BigDecimal discount = couponUser.getCoupon().getDiscountAmount(); // 0.1, 0.5 등
+      BigDecimal multiplier = BigDecimal.ONE.subtract(discount);
+      BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
+      finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
+
+      // 쿠폰 상태 변경
+      couponUser.setStatus("used");
+      couponUserRepository.save(couponUser);
 
       Payment payment = new Payment();
       payment.setReservation(reservation);
