@@ -32,6 +32,9 @@ public class PaymentCancelService {
     if ("CANCEL".equalsIgnoreCase(reservation.getStatus())) {
       return new PaymentCancelResponseDto(false, "이미 결제 취소가 처리되었습니다.");
     }
+    if ("PROCESSING".equalsIgnoreCase(reservation.getStatus())) {
+      return new PaymentCancelResponseDto(false, "아직 결제가 처리되지 않았습니다.");
+    }
 
     reservation.setStatus("CANCEL");
     reservation.setUpdateTime(LocalDateTime.now());
