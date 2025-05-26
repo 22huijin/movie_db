@@ -6,6 +6,9 @@ import com.example.demo.reservation.dto.LockPriceDTO;
 import com.example.demo.reservation.service.SeatReservationService;
 import com.example.demo.reservation.service.SeatSelectionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +24,33 @@ public class SeatSelectionController {
   private final SeatSelectionService seatSelectionService;
   private final SeatReservationService seatReservationService;
 
-  @Operation(summary = "좌석 선택 및 잠금", description = "좌석을 선택하여 10분간 잠금 상태로 설정합니다.")
+  @Operation(
+      summary = "좌석 선택 및 잠금",
+      description = "좌석을 선택하여 10분간 잠금 상태로 설정합니다.",
+      requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          required = true,
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = SeatSelectionRequestDTO.class),
+              examples = @ExampleObject(
+                  name = "좌석 선택 예시",
+                  value = """
+        {
+          "userId": 1,
+          "scheduleId": 1,
+          "seats": [
+            {
+              "rowNo": "A",
+              "colNo": 5,
+              "userType": "Adult"
+            }
+          ]
+        }
+        """
+              )
+          )
+      )
+  )
   @PostMapping("/select-seats")
   public SeatSelectionResponseDTO selectSeats(@RequestBody SeatSelectionRequestDTO dto) {
     try {

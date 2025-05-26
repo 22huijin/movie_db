@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 public class SeatSelectionRequestDTO {
+
   @Schema(description = "사용자 ID", example = "1", required = true)
   private Long userId;
 
@@ -18,13 +19,14 @@ public class SeatSelectionRequestDTO {
 
   @Getter
   public static class SeatInfo {
+
     @Schema(description = "행 좌석 (char)", example = "A", required = true)
     private char rowNo;
 
     @Schema(description = "열 좌석 (int)", example = "5", required = true)
     private int colNo;
 
-    @Schema(description = "사용자 타입", example = "Adult", required = true)
+    @Schema(description = "사용자 타입 (Adult, Youth, Senior 등)", example = "Adult", required = true)
     private String userType;
   }
 }
