@@ -1,6 +1,7 @@
 package com.example.demo.payment.service;
 
 import com.example.demo.coupon.domain.CouponUser;
+import com.example.demo.membership.event.ReservationCancelledEvent;
 import com.example.demo.payment.domain.Payment;
 import com.example.demo.payment.dto.PaymentCancelRequestDto;
 import com.example.demo.payment.dto.PaymentCancelResponseDto;
@@ -11,6 +12,7 @@ import com.example.demo.schedule.domain.Schedule;
 import com.example.demo.schedule.domain.ScheduleSeat;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public class PaymentCancelService {
 
   private final ReservationRepository reservationRepository;
   private final PaymentRepository paymentRepository;
+  private final ApplicationEventPublisher eventPublisher; // ✅ 이벤트 퍼블리셔 주입
 
   @Transactional
   public PaymentCancelResponseDto cancelPayment(PaymentCancelRequestDto request) {
@@ -32,22 +35,24 @@ public class PaymentCancelService {
     if ("CANCEL".equalsIgnoreCase(reservation.getStatus())) {
       return new PaymentCancelResponseDto(false, "이미 결제 취소가 처리되었습니다.");
     }
+
     if ("PROCESSING".equalsIgnoreCase(reservation.getStatus())) {
       return new PaymentCancelResponseDto(false, "아직 결제가 처리되지 않았습니다.");
     }
 
+    // 1. 예약 상태 변경
     reservation.setStatus("CANCEL");
     reservation.setUpdateTime(LocalDateTime.now());
 
-    // 1. schedule_seat 상태를 AVAILABLE로 변경
+    // 2. 좌석 상태 복원
     ScheduleSeat scheduleSeat = reservation.getScheduleSeat();
     scheduleSeat.setStatus("AVAILABLE");
 
-    // 2. schedule.availableSeats +1 증가
+    // 3. 스케줄 좌석 수 증가
     Schedule schedule = scheduleSeat.getSchedule();
     schedule.setAvailableSeats(schedule.getAvailableSeats() + 1);
 
-    // 3. 결제 상태 및 쿠폰 처리
+    // 4. 결제 상태 변경
     Payment payment = paymentRepository.findAll().stream()
         .filter(p -> p.getReservation().getReservationId().equals(reservationId))
         .findFirst()
@@ -55,12 +60,18 @@ public class PaymentCancelService {
 
     payment.setPaymentStatus("CANCEL");
 
-    // 쿠폰 환불 처리
+    // 5. 쿠폰 상태 복원
     CouponUser couponUser = payment.getCouponUser();
     if (couponUser != null) {
       couponUser.setStatus("UNUSED");
     }
 
+    // 6. 이벤트 발행
+    eventPublisher.publishEvent(
+        new ReservationCancelledEvent(reservation.getUser().getUserId()) // ✅ 정확한 getter 사용
+    );
+
+    // 7. 응답 반환
     Integer finalPrice = payment.getFinalPrice();
     return new PaymentCancelResponseDto(true, finalPrice + "원 환불되었습니다.");
   }

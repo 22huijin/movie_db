@@ -2,6 +2,7 @@ package com.example.demo.payment.service;
 
 import com.example.demo.coupon.domain.CouponUser;
 import com.example.demo.coupon.repository.CouponUserRepository;
+import com.example.demo.membership.event.PaymentConfirmedEvent;
 import com.example.demo.payment.domain.Payment;
 import com.example.demo.payment.domain.PricingPolicy;
 import com.example.demo.payment.dto.PaymentRequestDTO;
@@ -15,6 +16,7 @@ import com.example.demo.schedule.domain.ScheduleSeat;
 import com.example.demo.schedule.repository.ScheduleSeatRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,6 +33,7 @@ public class PaymentService {
   private final ReservationRepository reservationRepository;
   private final CouponUserRepository couponUserRepository;
   private final PaymentRepository paymentRepository;
+  private final ApplicationEventPublisher eventPublisher; // ✅ event publisher 주입
 
   @Transactional
   public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
@@ -59,6 +62,8 @@ public class PaymentService {
       scheduleSeatRepository.save(ss);
     }
 
+    Payment lastPayment = null;
+
     // 4. 결제 저장
     for (PaymentRequestDTO.PaymentDetail detail : request.getDetails()) {
       SeatLock lock = seatLocks.stream()
@@ -77,26 +82,21 @@ public class PaymentService {
       Integer finalPrice = price;
       CouponUser couponUser = null;
 
-      if (detail.getCouponUserId() == null) {
-        return new PaymentResponseDTO(false, "유효한 쿠폰이 아닙니다.");
-      }
-      couponUser = couponUserRepository.findById(detail.getCouponUserId()).orElse(null);
-      if (couponUser == null) {
-        return new PaymentResponseDTO(false, "쿠폰 정보가 없습니다.");
-      }
-      if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
-        return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
-      }
+      if (detail.getCouponUserId() != null) {
+        couponUser = couponUserRepository.findById(detail.getCouponUserId())
+            .orElseThrow(() -> new IllegalArgumentException("쿠폰 정보가 없습니다."));
+        if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
+          return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
+        }
 
-      // 할인율 적용 계산
-      BigDecimal discount = couponUser.getCoupon().getDiscountAmount(); // 0.1, 0.5 등
-      BigDecimal multiplier = BigDecimal.ONE.subtract(discount);
-      BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
-      finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
+        BigDecimal discount = couponUser.getCoupon().getDiscountAmount();
+        BigDecimal multiplier = BigDecimal.ONE.subtract(discount);
+        BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
+        finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
 
-      // 쿠폰 상태 변경
-      couponUser.setStatus("used");
-      couponUserRepository.save(couponUser);
+        couponUser.setStatus("used");
+        couponUserRepository.save(couponUser);
+      }
 
       Payment payment = new Payment();
       payment.setReservation(reservation);
@@ -106,9 +106,16 @@ public class PaymentService {
       payment.setPaymentStatus("PROCESSING");
 
       paymentRepository.save(payment);
+      lastPayment = payment; // 마지막 결제 기준으로 이벤트 발생
     }
 
     seatLockRepository.deleteAll(seatLocks);
+
+    // 5. 이벤트 발행
+    if (lastPayment != null) {
+      Long userId = lastPayment.getReservation().getUser().getUserId();
+      eventPublisher.publishEvent(new PaymentConfirmedEvent(userId));
+    }
 
     return new PaymentResponseDTO(true, "결제가 완료되었습니다.");
   }
