@@ -10,28 +10,27 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "movie_wishlist",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "movie_id"})
-        }
+    name = "movie_wishlist",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "movie_id"})
+    }
 )
 @Getter
 @Setter
 public class MovieWishlist {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wishlist_seq_gen")
-    @SequenceGenerator(name = "wishlist_seq_gen", sequenceName = "SEQ_WISHLIST_ID", allocationSize = 1)
-    private Long wishlistId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wishlist_seq_gen")
+  @SequenceGenerator(name = "wishlist_seq_gen", sequenceName = "SEQ_WISHLIST_ID", allocationSize = 1)
+  private Long wishlistId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "movie_id", nullable = false)
+  private Movie movie;
 
-    private LocalDateTime likedAt = LocalDateTime.now();
+  private LocalDateTime likedAt = LocalDateTime.now();
 }
-

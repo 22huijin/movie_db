@@ -15,17 +15,17 @@ import lombok.Setter;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MembershipType {
 
-    @Id
-    @Column(name = "membership_type_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Oracle 시퀀스를 사용할 경우 SEQUENCE 전략으로 변경
-    private Long membershipTypeId;
+  @Id
+  @Column(name = "membership_type_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // Oracle 시퀀스를 사용할 경우 SEQUENCE 전략으로 변경
+  private Long membershipTypeId;
 
-    @Column(name = "membership_name", nullable = false, length = 100)
-    private String membershipName;
+  @Column(name = "membership_name", nullable = false, length = 100)
+  private String membershipName;
 
-    @Column(name = "benefit_description", length = 2000)
-    private String benefitDescription;
+  @Column(name = "benefit_description", length = 2000)
+  private String benefitDescription;
 
-    @Column(name = "upgrade_condition", nullable = false, length = 2000)
-    private String upgradeCondition;
+  @Column(name = "upgrade_condition", nullable = false, length = 2000)
+  private String upgradeCondition;
 }

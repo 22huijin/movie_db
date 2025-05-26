@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "예매", description = "예매 및 결제 관련 API")@RestController
+@Tag(name = "예매", description = "예매 및 결제 관련 API")
+@RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 public class SeatSelectionController {

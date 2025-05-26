@@ -19,7 +19,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         JOIN FETCH s.movie m
         JOIN FETCH s.screen sc
         JOIN FETCH ss.seat seat
-        WHERE r.user.userId = :userId AND r.status != 'AVAILABLE'
+        WHERE r.user.userId = :userId AND r.status != 'PROCESSING'
         ORDER BY r.updateTime DESC
     """)
   List<Reservation> findDetailedReservationsByUserId(@Param("userId") Long userId);

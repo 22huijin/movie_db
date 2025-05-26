@@ -72,7 +72,7 @@ public class SeatReservationService {
           reservation.setScheduleSeat(ss);
           reservation.setPricingPolicy(policy);
           reservation.setUpdateTime(LocalDateTime.now());
-          reservation.setStatus("AVAILABLE");
+          reservation.setStatus("PROCESSING");
 
           reservationRepository.save(reservation);
 

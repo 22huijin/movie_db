@@ -17,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -78,7 +80,18 @@ public class PaymentService {
       if (detail.getCouponUserId() != null) {
         couponUser = couponUserRepository.findById(detail.getCouponUserId())
             .orElseThrow(() -> new IllegalArgumentException("쿠폰 정보가 없습니다."));
-        finalPrice = price - couponUser.getCoupon().getDiscountAmount().intValue();
+        // 이미 사용된 쿠폰인지 확인
+        if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
+          return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
+        }
+        // 할인율 적용 계산
+        BigDecimal discount = couponUser.getCoupon().getDiscountAmount(); // 0.1, 0.5 등
+        BigDecimal multiplier = BigDecimal.ONE.subtract(discount);         // 1 - 할인율
+        BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
+        finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
+        // 쿠폰 상태를 'USED'로 변경
+        couponUser.setStatus("used");
+        couponUserRepository.save(couponUser);
       }
 
       Payment payment = new Payment();
@@ -86,7 +99,7 @@ public class PaymentService {
       payment.setPaymentMethod(request.getPaymentMethod());
       payment.setCouponUser(couponUser);
       payment.setFinalPrice(finalPrice);
-      payment.setPaymentStatus("PENDING");
+      payment.setPaymentStatus("PROCESSING");
 
       paymentRepository.save(payment);
     }
