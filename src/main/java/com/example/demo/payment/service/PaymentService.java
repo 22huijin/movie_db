@@ -99,7 +99,7 @@ public class PaymentService {
       payment.setPaymentMethod(request.getPaymentMethod());
       payment.setCouponUser(couponUser);
       payment.setFinalPrice(finalPrice);
-      payment.setPaymentStatus("PENDING");
+      payment.setPaymentStatus("PROCESSING");
 
       paymentRepository.save(payment);
     }
