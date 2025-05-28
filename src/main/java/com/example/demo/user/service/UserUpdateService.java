@@ -20,7 +20,6 @@ public class UserUpdateService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        if (dto.getEmail() != null) user.setEmail(dto.getEmail());
         if (dto.getNickname() != null) user.setNickname(dto.getNickname());
         if (dto.getPassword() != null) user.setPassword(passwordEncoder.encode(dto.getPassword()));
         if (dto.getBirthDate() != null) user.setBirthDate(LocalDate.parse(dto.getBirthDate()));
