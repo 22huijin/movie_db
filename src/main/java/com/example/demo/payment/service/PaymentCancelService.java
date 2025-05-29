@@ -32,30 +32,35 @@ public class PaymentCancelService {
     if ("CANCEL".equalsIgnoreCase(reservation.getStatus())) {
       return new PaymentCancelResponseDto(false, "이미 결제 취소가 처리되었습니다.");
     }
+
     if ("PROCESSING".equalsIgnoreCase(reservation.getStatus())) {
       return new PaymentCancelResponseDto(false, "아직 결제가 처리되지 않았습니다.");
     }
 
+    ScheduleSeat scheduleSeat = reservation.getScheduleSeat();
+    Schedule schedule = scheduleSeat.getSchedule();
+
+    // 상영 시작 시간 체크: 이미 시작된 경우 취소 불가
+    if (!schedule.getStartTime().isAfter(LocalDateTime.now())) {
+      return new PaymentCancelResponseDto(false, "상영 시간이 지나 취소할 수 없습니다.");
+    }
+
+    // 예약 상태 변경
     reservation.setStatus("CANCEL");
     reservation.setUpdateTime(LocalDateTime.now());
 
-    // 1. schedule_seat 상태를 AVAILABLE로 변경
-    ScheduleSeat scheduleSeat = reservation.getScheduleSeat();
+    // 좌석 상태 복구
     scheduleSeat.setStatus("AVAILABLE");
 
-    // 2. schedule.availableSeats +1 증가
-    Schedule schedule = scheduleSeat.getSchedule();
+    // 남은 좌석 수 증가
     schedule.setAvailableSeats(schedule.getAvailableSeats() + 1);
 
-    // 3. 결제 상태 및 쿠폰 처리
-    Payment payment = paymentRepository.findAll().stream()
-        .filter(p -> p.getReservation().getReservationId().equals(reservationId))
-        .findFirst()
+    // 결제 상태 및 쿠폰 상태 변경
+    Payment payment = paymentRepository.findByReservation_ReservationId(reservationId)
         .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
 
     payment.setPaymentStatus("CANCEL");
 
-    // 쿠폰 환불 처리
     CouponUser couponUser = payment.getCouponUser();
     if (couponUser != null) {
       couponUser.setStatus("UNUSED");
