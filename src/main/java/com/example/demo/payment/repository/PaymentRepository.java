@@ -8,8 +8,11 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+  Optional<Payment> findByReservation_ReservationId(Long reservationId);
+
     // 멤버십 승급을 위해 Payment 테이블 조회
     @Query("""
     SELECT COALESCE(SUM(p.finalPrice), 0)
