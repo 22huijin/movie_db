@@ -22,13 +22,13 @@ public class CouponViewerService {
 
         return couponUsers.stream()
                 .filter(cu -> {
-                    boolean notUsed = !"used".equalsIgnoreCase(cu.getStatus());
+                    boolean notUsed = !"used".equalsIgnoreCase(cu.getUsageStatus());
                     boolean notExpired = cu.getValidUntil() == null || cu.getValidUntil().isAfter(LocalDate.now());
                     return notUsed && notExpired;
                 })
                 .map(cu -> {
                     String name = cu.getCoupon().getCouponName();
-                    String discount = cu.getCoupon().getDiscountAmount().multiply(BigDecimal.valueOf(100))
+                    String discount = cu.getCoupon().getDiscountRate().multiply(BigDecimal.valueOf(100))
                             .stripTrailingZeros()
                             .toPlainString() + "%";
                     LocalDate validUntil = cu.getValidUntil();

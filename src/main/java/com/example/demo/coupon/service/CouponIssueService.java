@@ -35,7 +35,7 @@ public class CouponIssueService {
             CouponUser couponUser = new CouponUser();
             couponUser.setUser(user);
             couponUser.setCoupon(coupon);
-            couponUser.setStatus("unused");
+            couponUser.setUsageStatus("unused");
             couponUser.setValidUntil(LocalDate.now().plusMonths(1));
             couponUserRepository.save(couponUser);
         }

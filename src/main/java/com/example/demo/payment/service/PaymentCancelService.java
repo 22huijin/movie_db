@@ -63,7 +63,7 @@ public class PaymentCancelService {
     // 5. 쿠폰 상태 복원
     CouponUser couponUser = payment.getCouponUser();
     if (couponUser != null) {
-      couponUser.setStatus("UNUSED");
+      couponUser.setUsageStatus("UNUSED");
     }
 
     // 6. 이벤트 발행

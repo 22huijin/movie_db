@@ -39,7 +39,7 @@ public class User {
 
   private LocalDate joinDate;   // 가입일
 
-  private String status = "active";  // 탈퇴 여부
+  private String withdrawStatus = "active";  // 탈퇴 여부
 
   @OneToMany(mappedBy = "user")
   private List<Reservation> reservations;

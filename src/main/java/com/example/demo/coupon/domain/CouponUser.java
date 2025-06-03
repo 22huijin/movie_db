@@ -27,5 +27,5 @@ public class CouponUser {
 
   private LocalDate validUntil;
 
-  private String status;
+  private String usageStatus;
 }

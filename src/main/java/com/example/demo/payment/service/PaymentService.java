@@ -85,16 +85,16 @@ public class PaymentService {
       if (detail.getCouponUserId() != null) {
         couponUser = couponUserRepository.findById(detail.getCouponUserId())
             .orElseThrow(() -> new IllegalArgumentException("쿠폰 정보가 없습니다."));
-        if (!"unused".equalsIgnoreCase(couponUser.getStatus())) {
+        if (!"unused".equalsIgnoreCase(couponUser.getUsageStatus())) {
           return new PaymentResponseDTO(false, "이미 사용된 쿠폰입니다.");
         }
 
-        BigDecimal discount = couponUser.getCoupon().getDiscountAmount();
+        BigDecimal discount = couponUser.getCoupon().getDiscountRate();
         BigDecimal multiplier = BigDecimal.ONE.subtract(discount);
         BigDecimal discounted = multiplier.multiply(BigDecimal.valueOf(price));
         finalPrice = discounted.setScale(0, RoundingMode.HALF_UP).intValue();
 
-        couponUser.setStatus("used");
+        couponUser.setUsageStatus("used");
         couponUserRepository.save(couponUser);
       }
 

@@ -17,10 +17,10 @@ public class UserDeleteService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자가 존재하지 않습니다."));
 
-        if (user.getStatus().equals("withdraw")) {
+        if (user.getWithdrawStatus().equals("withdraw")) {
             throw new IllegalStateException("이미 탈퇴한 사용자입니다.");
         }
 
-        user.setStatus("withdraw");
+        user.setWithdrawStatus("withdraw");
     }
 }

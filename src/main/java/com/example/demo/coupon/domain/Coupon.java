@@ -17,7 +17,7 @@ public class Coupon {
   private Long couponId;
 
   private String couponName;
-  private BigDecimal discountAmount;
+  private BigDecimal discountRate;
 
   @OneToMany(mappedBy = "coupon")
   private List<CouponUser> couponUsers;
