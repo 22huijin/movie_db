@@ -103,7 +103,7 @@ public class PaymentService {
       payment.setPaymentMethod(request.getPaymentMethod());
       payment.setCouponUser(couponUser);
       payment.setFinalPrice(finalPrice);
-      payment.setPaymentStatus("PROCESSING");
+      payment.setPaymentStatus("CONFIRMED");
 
       paymentRepository.save(payment);
       lastPayment = payment; // 마지막 결제 기준으로 이벤트 발생
