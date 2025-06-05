@@ -21,6 +21,7 @@ public class CouponViewerService {
         List<CouponUser> couponUsers = couponUserRepository.findByUserUserId(userId);
 
         return couponUsers.stream()
+                .filter(cu -> "UNUSED".equalsIgnoreCase(cu.getUsageStatus()))
                 .map(cu -> new UserCouponDTO(
                         cu.getCouponUserId(),
                         cu.getCoupon().getCouponName(),
