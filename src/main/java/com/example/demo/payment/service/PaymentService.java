@@ -33,7 +33,7 @@ public class PaymentService {
   private final ReservationRepository reservationRepository;
   private final CouponUserRepository couponUserRepository;
   private final PaymentRepository paymentRepository;
-  private final ApplicationEventPublisher eventPublisher; // ✅ event publisher 주입
+  private final ApplicationEventPublisher eventPublisher;
 
   @Transactional
   public PaymentResponseDTO processPayment(PaymentRequestDTO request) {

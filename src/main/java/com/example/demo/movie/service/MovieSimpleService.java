@@ -28,7 +28,7 @@ public class MovieSimpleService {
                         movie.getAgeRating() != null &&
                                 movie.getAgeRating().equals(ageRating)
                 ))
-                .map(MovieSimpleResponseDTO::fromEntity) // ✅ 변경된 부분
+                .map(MovieSimpleResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 }

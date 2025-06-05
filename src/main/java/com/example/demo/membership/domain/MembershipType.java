@@ -17,7 +17,7 @@ public class MembershipType {
 
   @Id
   @Column(name = "membership_type_id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // Oracle 시퀀스를 사용할 경우 SEQUENCE 전략으로 변경
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long membershipTypeId;
 
   @Column(name = "membership_name", nullable = false, length = 100)

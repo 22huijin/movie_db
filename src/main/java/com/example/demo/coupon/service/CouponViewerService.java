@@ -22,7 +22,7 @@ public class CouponViewerService {
 
         return couponUsers.stream()
                 .map(cu -> new UserCouponDTO(
-                        cu.getCouponUserId(),                   // ✅ coupon_user_id
+                        cu.getCouponUserId(),
                         cu.getCoupon().getCouponName(),
                         cu.getCoupon().getDiscountRate(),
                         cu.getValidUntil()

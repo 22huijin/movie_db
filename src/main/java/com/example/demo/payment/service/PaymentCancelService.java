@@ -23,7 +23,7 @@ public class PaymentCancelService {
 
   private final ReservationRepository reservationRepository;
   private final PaymentRepository paymentRepository;
-  private final ApplicationEventPublisher eventPublisher; // ✅ 이벤트 퍼블리셔 주입
+  private final ApplicationEventPublisher eventPublisher;
 
   @Transactional
   public PaymentCancelResponseDto cancelPayment(PaymentCancelRequestDto request) {

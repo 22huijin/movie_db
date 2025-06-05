@@ -41,7 +41,6 @@ public class MovieUpdateService {
             movie.setStatus("SHOWING");
         }
 
-        // MovieDetail도 수정
         MovieDetail detail = movie.getMovieDetail();
         if (detail != null) {
             detail.setGenre(request.getGenre());
@@ -50,7 +49,6 @@ public class MovieUpdateService {
             detail.setTrailerUrl(request.getTrailerUrl());
             detail.setStillCutUrl(request.getStillCutUrl());
         } else {
-            // 필요 시 새로 생성
             MovieDetail newDetail = new MovieDetail();
             newDetail.setMovie(movie);
             newDetail.setGenre(request.getGenre());
