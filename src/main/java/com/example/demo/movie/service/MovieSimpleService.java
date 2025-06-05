@@ -15,18 +15,20 @@ public class MovieSimpleService {
 
     private final MovieRepository movieRepository;
 
-    public List<MovieSimpleResponseDTO> getMoviesByStatus(String status) {
+    public List<MovieSimpleResponseDTO> getMoviesFiltered(String status, String genre, String ageRating) {
         List<Movie> movies = movieRepository.findByStatus(status);
+
         return movies.stream()
-                .map(movie -> new MovieSimpleResponseDTO(
-                        movie.getMovieId(),
-                        movie.getTitle(),
-                        movie.getThumbnailUrl(),
-                        movie.getRunningTime(),
-                        movie.getReleaseDate(),
-                        movie.getStatus(),
-                        movie.getLikeRating()
+                .filter(movie -> genre == null || (
+                        movie.getMovieDetail() != null &&
+                                movie.getMovieDetail().getGenre() != null &&
+                                movie.getMovieDetail().getGenre().contains(genre)
                 ))
+                .filter(movie -> ageRating == null || (
+                        movie.getAgeRating() != null &&
+                                movie.getAgeRating().equals(ageRating)
+                ))
+                .map(MovieSimpleResponseDTO::fromEntity) // ✅ 변경된 부분
                 .collect(Collectors.toList());
     }
 }

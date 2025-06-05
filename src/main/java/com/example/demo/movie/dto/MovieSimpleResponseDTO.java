@@ -27,11 +27,20 @@ public class MovieSimpleResponseDTO {
     @Schema(description = "개봉일", example = "2025-04-17")
     private LocalDate releaseDate;
 
-    @Schema(description = "상영 상태", example = "SHOWING") // 또는 "UPCOMING"
-    private String status;
+    @Schema(description = "상영 등급", example = "15세이상관람가")
+    private String ageRating;
 
-    @Schema(description = "영화 평점", example = "4.8")
+    @Schema(description = "영화 소개", example = "사구 행성 아라키스를 둘러싼 전쟁이 시작된다.")
+    private String description;
+
+    @Schema(description = "좋아요 평점", example = "4.8")
     private double likeRating;
+
+    @Schema(description = "누적 관객 수", example = "1000000")
+    private int totalAudience;
+
+    @Schema(description = "상영 상태", example = "SHOWING") // 또는 UPCOMING
+    private String status;
 
     public static MovieSimpleResponseDTO fromEntity(Movie movie) {
         return new MovieSimpleResponseDTO(
@@ -40,9 +49,11 @@ public class MovieSimpleResponseDTO {
                 movie.getThumbnailUrl(),
                 movie.getRunningTime(),
                 movie.getReleaseDate(),
-                movie.getStatus(),
-                movie.getLikeRating()
+                movie.getAgeRating(),
+                movie.getDescription(),
+                movie.getLikeRating(),
+                movie.getTotalAudience(),
+                movie.getStatus()
         );
     }
-
 }

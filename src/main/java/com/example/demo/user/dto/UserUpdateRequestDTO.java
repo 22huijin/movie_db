@@ -9,5 +9,4 @@ import lombok.Setter;
 public class UserUpdateRequestDTO {
     private String nickname;
     private String password;     // 새 비밀번호
-    private String birthDate;    // yyyy-MM-dd
 }

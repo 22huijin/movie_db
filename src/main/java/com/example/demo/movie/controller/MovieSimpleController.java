@@ -14,12 +14,15 @@ import java.util.List;
 @RequestMapping("/api/movies")
 @RequiredArgsConstructor
 public class MovieSimpleController {
-
-    private final MovieSimpleService movieService;
+    private final MovieSimpleService movieSimpleService;
 
     @GetMapping("/simple")
-    @Operation(summary = "상영작/예정작 조회", description = "영화의 상영 상태(SHOWING/UPCOMING)에 따라 목록을 조회합니다.")
-    public List<MovieSimpleResponseDTO> getMoviesByStatus(@RequestParam String status) {
-        return movieService.getMoviesByStatus(status);
+    @Operation(summary = "상영작/예정작 조회", description = "영화의 상영 상태(SHOWING/UPCOMING), 장르, 상영등급을 기반으로 영화 목록을 조회합니다.")
+    public List<MovieSimpleResponseDTO> getMoviesByFilters(
+            @RequestParam String status,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String ageRating
+    ) {
+        return movieSimpleService.getMoviesFiltered(status, genre, ageRating);
     }
 }
