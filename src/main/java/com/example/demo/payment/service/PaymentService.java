@@ -39,6 +39,9 @@ public class PaymentService {
   public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
     LocalDateTime now = LocalDateTime.now();
 
+    Payment payment = new Payment();
+    payment.setPaymentStatus("PROCESSING");
+
     // 1. seatLock 조회
     List<SeatLock> seatLocks = seatLockRepository.findAllById(
         request.getDetails().stream().map(PaymentRequestDTO.PaymentDetail::getLockId).toList()
@@ -98,7 +101,6 @@ public class PaymentService {
         couponUserRepository.save(couponUser);
       }
 
-      Payment payment = new Payment();
       payment.setReservation(reservation);
       payment.setPaymentMethod(request.getPaymentMethod());
       payment.setCouponUser(couponUser);
