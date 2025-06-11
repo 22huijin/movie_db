@@ -14,6 +14,9 @@ public class ReservationHistoryResponseDTO {
   @Schema(description = "예매 ID", example = "1001")
   private Long reservationId;
 
+  @Schema(description = "영화 ID", example = "1")
+  private Long movieId;
+
   @Schema(description = "영화 제목", example = "Interstellar")
   private String movieTitle;
 

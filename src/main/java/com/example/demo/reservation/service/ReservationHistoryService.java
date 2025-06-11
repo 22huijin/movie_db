@@ -23,6 +23,7 @@ public class ReservationHistoryService {
           var screen = schedule.getScreen();
           return new ReservationHistoryResponseDTO(
               reservation.getReservationId(),
+              movie.getMovieId(),
               movie.getTitle(),
               screen.getName(),
               schedule.getStartTime(),
