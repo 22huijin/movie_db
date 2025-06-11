@@ -89,6 +89,7 @@ public class SeatSelectionService {
       lock.setExpiresAt(now.plusMinutes(10));
 
       lockIds.add(seatLockRepository.save(lock).getLockId());
+      //세이브포인트
     }
 
     return lockIds;

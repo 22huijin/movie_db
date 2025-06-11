@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SeatLockRepository extends JpaRepository<SeatLock, Long> {
+  List<SeatLock> findByUser_UserId(Long userId);
   List<SeatLock> findByScheduleSeat(ScheduleSeat scheduleSeat);
   List<SeatLock> findByScheduleSeatAndExpiresAtAfter(ScheduleSeat scheduleSeat, LocalDateTime now);
   void deleteByScheduleSeatAndExpiresAtBefore(ScheduleSeat scheduleSeat, LocalDateTime now);
