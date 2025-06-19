@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Deprecated
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor

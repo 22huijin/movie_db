@@ -38,6 +38,11 @@ dependencies {
 	// Security
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	testImplementation("org.springframework.security:spring-security-test")
+
+	/* === KakaoPay 통신용 === */
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 }
 
 tasks.withType<Test> {

@@ -13,6 +13,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   Optional<Reservation> findByScheduleSeat(ScheduleSeat scheduleSeat);
 
   @Query("""
+        SELECT r
+        FROM Reservation r
+        WHERE r.scheduleSeat = :scheduleSeat
+          AND r.status = 'PROCESSING'
+    """)
+  Optional<Reservation> findProcessingByScheduleSeat(@Param("scheduleSeat") ScheduleSeat scheduleSeat);
+
+  @Query("""
         SELECT r FROM Reservation r
         JOIN FETCH r.scheduleSeat ss
         JOIN FETCH ss.schedule s
