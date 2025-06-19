@@ -27,7 +27,7 @@ public class SeatLockCleanupService {
   /**
    * 만료된 SeatLock, 관련 ScheduleSeat 상태, Reservation까지 복구 및 삭제
    */
-  @Scheduled(fixedDelayString = "${seatlock.cleanup.delay:600000}")
+  @Scheduled(fixedDelayString = "${seatlock.cleanup.delay:100000}")
   @Transactional
   public void cleanupExpiredLocks() {
     LocalDateTime now = LocalDateTime.now();
