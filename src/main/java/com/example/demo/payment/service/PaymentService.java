@@ -75,7 +75,7 @@ public class PaymentService {
           .orElseThrow();
 
       ScheduleSeat ss = lock.getScheduleSeat();
-      Reservation reservation = reservationRepository.findByScheduleSeat(ss)
+      Reservation reservation = reservationRepository.findProcessingByScheduleSeat(ss)
           .orElseThrow(() -> new IllegalStateException("예약 정보가 없습니다."));
       reservation.setStatus("CONFIRMED");
 
