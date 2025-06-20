@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class EventUser {
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_user_seq_gen")
+  @SequenceGenerator(name = "event_user_seq_gen", sequenceName = "EVENT_USER_SEQ", allocationSize = 1)
   private Long eventUserId;
 
   @ManyToOne
