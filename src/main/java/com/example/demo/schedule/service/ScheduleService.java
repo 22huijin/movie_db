@@ -45,8 +45,8 @@ public class ScheduleService {
             s.getScreen().getName(),
             s.getStartTime().toString(),
             s.getEndTime().toString(),
-            s.getAvailableSeats()
-//            s.getPrice()
+            s.getAvailableSeats(),
+            s.getScreen().getTotalSeats()
         ))
         .toList();
   }
