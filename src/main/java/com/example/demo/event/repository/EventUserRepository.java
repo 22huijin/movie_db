@@ -14,6 +14,8 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
 
   List<EventUser> findByEvents(Event event);
 
+  boolean existsByEventsAndApplyStatus(Event events, String applyStatus);
+
   List<EventUser> findByEventsAndApplyStatus(Event event, String applyStatus);
   void deleteAllByEvents_EventId(Long eventId);
 }
