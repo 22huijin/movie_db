@@ -27,6 +27,8 @@ public class Payment {
   @JoinColumn(name = "coupon_user_id")
   private CouponUser couponUser;
 
+  private Integer usedPoint;
+
   private Integer finalPrice;
 
   private String paymentStatus;

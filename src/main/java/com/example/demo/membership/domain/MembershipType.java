@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "MEMBERSHIP_TYPE")
 @Getter
@@ -14,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MembershipType {
-
   @Id
   @Column(name = "membership_type_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,6 @@ public class MembershipType {
 
   @Column(name = "upgrade_condition", nullable = false, length = 2000)
   private String upgradeCondition;
+
+  private BigDecimal pointAccumulationRate ;
 }

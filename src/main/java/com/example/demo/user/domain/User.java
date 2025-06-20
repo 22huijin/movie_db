@@ -41,6 +41,8 @@ public class User {
 
   private String withdrawStatus = "active";  // 탈퇴 여부
 
+  private Integer availablePoint;
+
   @OneToMany(mappedBy = "user")
   private List<Reservation> reservations;
 
