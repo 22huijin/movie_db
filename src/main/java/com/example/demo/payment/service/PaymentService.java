@@ -3,6 +3,7 @@ package com.example.demo.payment.service;
 import com.example.demo.coupon.domain.CouponUser;
 import com.example.demo.coupon.repository.CouponUserRepository;
 import com.example.demo.membership.event.PaymentConfirmedEvent;
+import com.example.demo.membership.domain.MembershipType;
 import com.example.demo.payment.domain.Payment;
 import com.example.demo.payment.domain.PricingPolicy;
 import com.example.demo.payment.dto.PaymentRequestDTO;
@@ -14,6 +15,9 @@ import com.example.demo.reservation.repository.ReservationRepository;
 import com.example.demo.reservation.repository.SeatLockRepository;
 import com.example.demo.schedule.domain.ScheduleSeat;
 import com.example.demo.schedule.repository.ScheduleSeatRepository;
+import com.example.demo.user.repository.UserRepository;
+import com.example.demo.user.domain.User;
+import com.example.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,20 +37,24 @@ public class PaymentService {
   private final ReservationRepository reservationRepository;
   private final CouponUserRepository couponUserRepository;
   private final PaymentRepository paymentRepository;
+  private final UserRepository userRepository;
   private final ApplicationEventPublisher eventPublisher;
 
   @Transactional
   public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
     LocalDateTime now = LocalDateTime.now();
 
-    Payment payment = new Payment();
-    payment.setPaymentStatus("PROCESSING");
+    SeatLock refLock = seatLockRepository.findById(
+        request.getDetails().get(0).getLockId()
+    ).orElseThrow();
+
+    User user = userRepository.findByIdForUpdate(
+        refLock.getUser().getUserId()).orElseThrow();
 
     // 1. seatLock 조회
     List<SeatLock> seatLocks = seatLockRepository.findAllById(
         request.getDetails().stream().map(PaymentRequestDTO.PaymentDetail::getLockId).toList()
     );
-
     if (seatLocks.size() != request.getDetails().size()) {
       return new PaymentResponseDTO(false, "유효하지 않은 좌석 잠금 정보가 있습니다.");
     }
@@ -58,6 +66,13 @@ public class PaymentService {
       }
     }
 
+    /* ---------- 사용가능 포인트 확인 & 차감 ---------- */
+    int usePoint = request.getUsePoint() == null ? 0 : request.getUsePoint();
+    if (usePoint > user.getAvailablePoint()) {
+      return new PaymentResponseDTO(false, "보유 포인트가 부족합니다.");
+    }
+    user.setAvailablePoint(user.getAvailablePoint() - usePoint);
+
     // 3. 좌석 상태 CONFIRMED 처리
     for (SeatLock lock : seatLocks) {
       ScheduleSeat ss = lock.getScheduleSeat();
@@ -65,9 +80,15 @@ public class PaymentService {
       scheduleSeatRepository.save(ss);
     }
 
+    /* ---------- 결제 저장 & 결제별 포인트 분배 ---------- */
+    int lockCount     = seatLocks.size();
+    int pointPerSeat  = lockCount == 0 ? 0 : usePoint / lockCount;
+    int remainder     = lockCount == 0 ? 0 : usePoint % lockCount;
+
     Payment lastPayment = null;
 
     // 4. 결제 저장
+    int idx = 0;
     for (PaymentRequestDTO.PaymentDetail detail : request.getDetails()) {
       SeatLock lock = seatLocks.stream()
           .filter(l -> l.getLockId().equals(detail.getLockId()))
@@ -101,16 +122,37 @@ public class PaymentService {
         couponUserRepository.save(couponUser);
       }
 
+      /* ----- 포인트 사용 차감 ----- */
+      int seatPoint = pointPerSeat + (idx == seatLocks.size() - 1 ? remainder : 0);
+      finalPrice -= seatPoint;
+
+      Payment payment = new Payment();
       payment.setReservation(reservation);
       payment.setPaymentMethod(request.getPaymentMethod());
       payment.setCouponUser(couponUser);
+      payment.setUsedPoint(seatPoint);
       payment.setFinalPrice(finalPrice);
       payment.setPaymentStatus("CONFIRMED");
 
       paymentRepository.save(payment);
       lastPayment = payment; // 마지막 결제 기준으로 이벤트 발생
+      idx++;
     }
 
+    /* ---------- 포인트 적립 ---------- */
+    MembershipType mt = user.getMembershipType();
+    BigDecimal rate = (mt != null && mt.getPointAccumulationRate() != null)
+        ? mt.getPointAccumulationRate()
+        : BigDecimal.ZERO;
+    int totalAccumulate = lastPayment == null ? 0 :
+        BigDecimal.valueOf((long) lastPayment.getFinalPrice() * lockCount)
+            .multiply(rate)
+            .setScale(0, RoundingMode.HALF_UP)
+            .intValue();
+
+    user.setAvailablePoint(user.getAvailablePoint() + totalAccumulate);
+
+    /* ---------- 좌석 잠금 해제 ---------- */
     seatLockRepository.deleteAll(seatLocks);
 
     // 5. 이벤트 발행

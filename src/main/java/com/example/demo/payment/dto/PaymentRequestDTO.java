@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class PaymentRequestDTO {
   private String paymentMethod;
+  private Integer usePoint;
 
   private List<PaymentDetail> details;
 
