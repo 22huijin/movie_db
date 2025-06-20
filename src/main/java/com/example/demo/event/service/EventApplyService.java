@@ -47,7 +47,7 @@ public class EventApplyService {
     EventUser eventUser = new EventUser();
     eventUser.setEvents(event);
     eventUser.setUser(user);
-    eventUser.setApplyStatus(""); // 초기 상태
+    eventUser.setApplyStatus("APPLY"); // 초기 상태
 
     eventUserRepository.save(eventUser);
 
