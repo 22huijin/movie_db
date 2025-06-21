@@ -15,5 +15,6 @@ public class UserSignUpResponseDTO {
     private String role;
     private LocalDate birthDate;
     private LocalDate joinDate;
+    private int availablePoint;
 }
 

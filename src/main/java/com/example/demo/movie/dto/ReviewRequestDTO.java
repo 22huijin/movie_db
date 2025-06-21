@@ -17,5 +17,8 @@ public class ReviewRequestDTO {
 
     @Schema(description = "평점 (0.0 ~ 5.0)", example = "4.5")
     private float rating;
+
+    @Schema(description = "리뷰 내용", example = "정말 감동적인 영화였습니다!")
+    private String context; //
 }
 

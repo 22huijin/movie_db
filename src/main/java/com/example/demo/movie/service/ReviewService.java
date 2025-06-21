@@ -34,6 +34,7 @@ public class ReviewService {
         review.setUser(user);
         review.setMovie(movie);
         review.setRating(dto.getRating());
+        review.setContext(dto.getContext());
         reviewRepository.save(review);
 
         // 리뷰 등록 후 평점 평균 계산
@@ -52,7 +53,17 @@ public class ReviewService {
     public List<ReviewResponseDTO> getReviewsByUserId(Long userId) {
         List<Review> reviews = reviewRepository.findByUserUserId(userId);
         return reviews.stream()
-                .map(review -> new ReviewResponseDTO(review.getMovie().getMovieId(), review.getRating()))
+                .map(review -> new ReviewResponseDTO(review.getMovie().getMovieId(), review.getRating(), review.getContext()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponseDTO> getReviewsByMovieId(Long movieId) {
+        List<Review> reviews = reviewRepository.findByMovie_MovieId(movieId);
+        return reviews.stream()
+                .map(review -> new ReviewResponseDTO(
+                        review.getMovie().getMovieId(),
+                        review.getRating(),
+                        review.getContext()))
                 .collect(Collectors.toList());
     }
 }

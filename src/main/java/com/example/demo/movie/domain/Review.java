@@ -23,4 +23,6 @@ public class Review {
   private Movie movie;
 
   private float rating;
+
+  private String context;
 }

@@ -1,5 +1,9 @@
 package com.example.demo.user.service;
 
+import com.example.demo.coupon.domain.Coupon;
+import com.example.demo.coupon.domain.CouponUser;
+import com.example.demo.coupon.repository.CouponRepository;
+import com.example.demo.coupon.repository.CouponUserRepository;
 import com.example.demo.membership.domain.MembershipType;
 import com.example.demo.membership.repository.MembershipTypeRepository;
 import com.example.demo.user.domain.User;
@@ -19,6 +23,8 @@ public class UserSignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MembershipTypeRepository membershipTypeRepository;
+    private final CouponRepository couponRepository;
+    private final CouponUserRepository couponUserRepository;
 
     public UserSignUpResponseDTO signup(UserSignUpRequestDTO dto) {
         MembershipType welcomeMembership = membershipTypeRepository.findByMembershipName("WELCOME")
@@ -28,21 +34,35 @@ public class UserSignUpService {
         user.setNickname(dto.getNickname());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setMembershipType(welcomeMembership);  // 문자열 X, 객체 O
+        user.setMembershipType(welcomeMembership);
         user.setRole("USER");
         user.setBirthDate(dto.getBirthDate());
         user.setJoinDate(LocalDate.now());
+        user.setAvailablePoint(0);
 
         User savedUser = userRepository.save(user);
+
+        Coupon welcomeCoupon = couponRepository.findById(1L)
+                .orElseThrow(() -> new IllegalStateException("쿠폰 ID 1번이 존재하지 않습니다."));
+
+        CouponUser couponUser = new CouponUser();
+        couponUser.setUser(savedUser);
+        couponUser.setCoupon(welcomeCoupon);
+        couponUser.setUsageStatus("unused");
+        couponUser.setValidUntil(LocalDate.now().plusMonths(1)); // 유효기간 1달
+
+        couponUserRepository.save(couponUser);
 
         return new UserSignUpResponseDTO(
                 savedUser.getUserId(),
                 savedUser.getNickname(),
                 savedUser.getEmail(),
-                savedUser.getMembershipType().getMembershipName(), // 이름 추출
+                savedUser.getMembershipType().getMembershipName(),
                 savedUser.getRole(),
                 savedUser.getBirthDate(),
-                savedUser.getJoinDate()
+                savedUser.getJoinDate(),
+                savedUser.getAvailablePoint()
         );
     }
 }
+

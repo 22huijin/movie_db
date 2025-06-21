@@ -29,7 +29,15 @@ public class ReviewController {
 
     @Tag(name = "마이페이지", description = "회원정보 조회/영화 찜/내 리뷰 모아보기 API")
     @GetMapping("/user/{userId}")
+    @Operation(summary = "내 리뷰 모아보기", description = "userId 기준으로 리뷰를 조회합니다.")
     public List<ReviewResponseDTO> getReviewsByUser(@PathVariable Long userId) {
         return reviewService.getReviewsByUserId(userId);
+    }
+
+    @Tag(name = "영화", description = "영화 등록 및 조회 관련 API")
+    @GetMapping("/movie/{movieId}")
+    @Operation(summary = "영화별 리뷰 모아보기", description = "movieId 기준으로 리뷰를 조회합니다.")
+    public List<ReviewResponseDTO> getReviewsByMovieId(@PathVariable Long movieId) {
+        return reviewService.getReviewsByMovieId(movieId);
     }
 }

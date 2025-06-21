@@ -15,10 +15,10 @@ public class CouponIssueController {
 
     private final CouponIssueService couponIssueService;
 
-    @Operation(summary = "쿠폰 수동 발행", description = "관리자가 couponId를 입력하면 해당 쿠폰을 전 유저 대상으로 발급합니다.")
+    @Operation(summary = "쿠폰 수동 발행", description = "관리자가 couponName을 입력하면 해당 쿠폰을 전 유저 대상으로 발급합니다.")
     @PostMapping("/issue/all")
-    public ResponseEntity<String> issueCouponToAll(@RequestParam Long couponId) {
-        couponIssueService.issueCouponToAllUsers(couponId);
+    public ResponseEntity<String> issueCouponToAll(@RequestParam String couponName) {
+        couponIssueService.issueCouponToAllUsers(couponName);
         return ResponseEntity.ok("쿠폰이 전체 회원에게 발급되었습니다.");
     }
 }

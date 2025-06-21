@@ -18,7 +18,8 @@ import java.math.BigDecimal;
 public class MembershipType {
   @Id
   @Column(name = "membership_type_id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "membership_type_seq_gen")
+  @SequenceGenerator(name = "membership_type_seq_gen", sequenceName = "MEMBERSHIP_TYPE_SEQ", allocationSize = 1)
   private Long membershipTypeId;
 
   @Column(name = "membership_name", nullable = false, length = 100)

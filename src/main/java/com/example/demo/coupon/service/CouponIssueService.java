@@ -22,15 +22,12 @@ public class CouponIssueService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void issueCouponToAllUsers(Long couponId) {
-        // 1. 쿠폰 존재 확인
-        Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다."));
+    public void issueCouponToAllUsers(String couponName) {
+        Coupon coupon = couponRepository.findByCouponName(couponName)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 쿠폰이 존재하지 않습니다."));
 
-        // 2. 모든 사용자 조회
         List<User> users = userRepository.findAll();
 
-        // 3. 사용자마다 CouponUser 생성
         for (User user : users) {
             CouponUser couponUser = new CouponUser();
             couponUser.setUser(user);
@@ -40,5 +37,6 @@ public class CouponIssueService {
             couponUserRepository.save(couponUser);
         }
     }
+
 }
 
