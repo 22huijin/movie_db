@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long userId);
     List<User> findByJoinDate(LocalDate joinDate);
     List<User> findByBirthDate(LocalDate birthDate);
+    Optional<User> findByEmailAndWithdrawStatus(String email, String withdrawStatus);
 
     @Query("SELECT u FROM User u JOIN FETCH u.membershipType WHERE u.joinDate = :joinDate")
     List<User> findByJoinDateWithMembership(@Param("joinDate") LocalDate joinDate);

@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Tag(name = "회원 관리", description = "회원가입, 회원정보 수정, 탈퇴 관련 API")
-public class EmailDuplicateCheckController  {
+public class EmailDuplicateCheckController {
 
     private final EmailDuplicateCheckService emailDuplicateCheckService;
 
     @Operation(summary = "이메일 중복 검사", description = "회원가입 전에 해당 이메일로 이미 가입된 정보가 있는지 조회합니다.")
     @PostMapping("/check-email")
     public EmailCheckResponseDTO checkEmailDuplicate(@RequestBody EmailCheckRequestDTO requestDto) {
-        boolean isDuplicate = emailDuplicateCheckService.isEmailDuplicate(requestDto.getEmail());
-        return new EmailCheckResponseDTO(isDuplicate);
+        return emailDuplicateCheckService.checkEmail(requestDto.getEmail());
     }
 }
 
