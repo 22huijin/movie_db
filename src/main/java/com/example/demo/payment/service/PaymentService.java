@@ -52,9 +52,13 @@ public class PaymentService {
         refLock.getUser().getUserId()).orElseThrow();
 
     // 1. seatLock 조회
-    List<SeatLock> seatLocks = seatLockRepository.findAllById(
-        request.getDetails().stream().map(PaymentRequestDTO.PaymentDetail::getLockId).toList()
-    );
+    List<Long> lockIds = request.getDetails()
+        .stream()
+        .map(PaymentRequestDTO.PaymentDetail::getLockId)
+        .toList();
+
+    List<SeatLock> seatLocks = seatLockRepository.findAllByIdForUpdate(lockIds);
+
     if (seatLocks.size() != request.getDetails().size()) {
       return new PaymentResponseDTO(false, "유효하지 않은 좌석 잠금 정보가 있습니다.");
     }
@@ -94,9 +98,10 @@ public class PaymentService {
           .filter(l -> l.getLockId().equals(detail.getLockId()))
           .findFirst()
           .orElseThrow();
-
       ScheduleSeat ss = lock.getScheduleSeat();
-      Reservation reservation = reservationRepository.findProcessingByScheduleSeat(ss)
+
+      Reservation reservation = reservationRepository
+          .findProcessingByScheduleSeat(ss).stream().findFirst()
           .orElseThrow(() -> new IllegalStateException("예약 정보가 없습니다."));
       reservation.setStatus("CONFIRMED");
 

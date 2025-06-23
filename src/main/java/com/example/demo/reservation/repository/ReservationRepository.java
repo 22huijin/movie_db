@@ -17,8 +17,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         FROM Reservation r
         WHERE r.scheduleSeat = :scheduleSeat
           AND r.status = 'PROCESSING'
+        ORDER BY r.updateTime DESC
     """)
-  Optional<Reservation> findProcessingByScheduleSeat(@Param("scheduleSeat") ScheduleSeat scheduleSeat);
+  List<Reservation> findProcessingByScheduleSeat(@Param("scheduleSeat") ScheduleSeat scheduleSeat);
 
   @Query("""
         SELECT r FROM Reservation r

@@ -28,13 +28,12 @@ public class SeatLockListService {
       var seat = scheduleSeat.getSeat();
 
       // 가격 가져오기 (있을 경우)
-      Reservation reservation = reservationRepository
-          .findByScheduleSeat(scheduleSeat)
-          .orElse(null);
-
-      int price = (reservation != null)
-          ? reservation.getPricingPolicy().getPrice()
-          : 0;
+      int price = reservationRepository
+          .findProcessingByScheduleSeat(scheduleSeat)
+          .stream()
+          .findFirst()
+          .map(r -> r.getPricingPolicy().getPrice())
+          .orElse(0);
 
       return new SeatLockInfoDto(
           schedule.getMovie().getTitle(),

@@ -46,8 +46,8 @@ public class SeatLockCleanupService {
       scheduleRepository.save(schedule);
 
       // 3) Reservation 삭제 (좌석에 연결된 예약)
-      reservationRepository.findByScheduleSeat(ss)
-          .ifPresent(reservationRepository::delete);
+      reservationRepository.findProcessingByScheduleSeat(ss)
+          .forEach(reservationRepository::delete);
 
       // 4) SeatLock 삭제
       seatLockRepository.delete(lock);
